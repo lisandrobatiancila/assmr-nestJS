@@ -102,7 +102,7 @@ export class AddressController {
                         ]
                     },
                     {
-                        id: 'bb',
+                        id: 'bntyn',
                         name: 'Bantayan',
                         barangay: [
                             {
