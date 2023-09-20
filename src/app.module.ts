@@ -8,6 +8,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Account } from './entity/signup/signup.entity';
 import { SigninService } from './service/signin/signin.service';
 import { SigninModule } from './controllers/signin/signin.module';
+import { MyPropertyController } from './controllers/my-property/my-property.controller';
+import { MyPropertyModule } from './controllers/my-property/my-property.module';
+import { MyPropertyService } from './service/my-property/my-property.service';
 
 @Module({
   imports: [AddressModule, SignupModule,
@@ -21,9 +24,10 @@ import { SigninModule } from './controllers/signin/signin.module';
       entities: [Account], // list your entity here
       synchronize: true
     }),
-    SigninModule
+    SigninModule,
+    MyPropertyModule
   ],
-  controllers: [AppController],
-  providers: [AppService, SignupService, SigninService],
+  controllers: [AppController, MyPropertyController],
+  providers: [AppService, SignupService, SigninService, MyPropertyService],
 })
 export class AppModule {}
