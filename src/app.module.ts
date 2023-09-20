@@ -20,14 +20,14 @@ import { MyPropertyService } from './service/my-property/my-property.service';
       port: 3306,
       username: 'root',
       password: '',
-      database: 'assmr',
+      database: 'assmr2',
       entities: [Account], // list your entity here
       synchronize: true
     }),
     SigninModule,
     MyPropertyModule
   ],
-  controllers: [AppController, MyPropertyController],
+  controllers: [AppController],
   providers: [AppService, SignupService, SigninService, MyPropertyService],
 })
 export class AppModule {}
