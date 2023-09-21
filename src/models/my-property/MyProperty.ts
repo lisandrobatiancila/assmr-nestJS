@@ -20,6 +20,7 @@ export interface UploadVehicleIMGPropertyModel {
 
 export interface MyVehiclePropertyModel {
     id: number,
+    userID?: number,
     brand: string,
     model: string,
     owner: string,
@@ -28,5 +29,17 @@ export interface MyVehiclePropertyModel {
     installmentpaid: string,
     installmentduration: string,
     delinquent: string,
-    description: string
-}
+    description: string,
+    vehicleIMG?: MyVehicleIMGModel
+} // used this when fetching vehicle properties from DB
+
+export interface MyVehicleIMGModel {
+    id: number,
+    vehicleID: number,
+    vehicleForntIMG: string,
+    vehicleRightIMG: string,
+    vehicleLeftIMG: string,
+    vehicleBackIMG: string,
+    vehicleCRIMG: string,
+    vehicleORIMG: string
+} // used this when fetching vehicle images from DB

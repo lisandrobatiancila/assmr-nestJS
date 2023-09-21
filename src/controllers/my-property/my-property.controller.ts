@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Param, Post, UploadedFile, UploadedFiles, UseInterceptors } from '@nestjs/common';
 import { AnyFilesInterceptor, FileInterceptor, FilesInterceptor, MulterModule } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
+import { MyVehiclePropertyModel } from 'src/models/my-property/MyProperty';
 import { VehicleOwnerModel } from 'src/models/user/UserModel';
 import { MyPropertyService } from 'src/service/my-property/my-property.service';
 
@@ -38,8 +39,8 @@ export class MyPropertyController {
         }
     }
     @Get("vehicles/:email")
-    getActiveUserVehicles(@Param("email") email: string) {
-        this.propertyService.getActiveUserProperty(email)
+    getActiveUserVehicles(@Param("email") email: string): Promise<ResponseData<MyVehiclePropertyModel>> {
+        return this.propertyService.getActiveUserProperty(email)
     } // get all vehicles of active user
     @Get("vehicle")
     getAllVehicles() {
