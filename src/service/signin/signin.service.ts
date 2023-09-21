@@ -1,68 +1,97 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Account } from 'src/entity/signup/signup.entity';
+import { Account, User } from 'src/entity/signup/signup.entity';
 import { ActiveUserCredentialsModel, UserSigninModel } from 'src/models/user/UserModel';
 import { Repository } from 'typeorm';
 
 @Injectable()
 export class SigninService {
-    constructor(@InjectRepository(Account) private userCredential: Repository<Account>) {
+    constructor(@InjectRepository(User) private userCredential: Repository<User>, @InjectRepository(Account) private accountCred: Repository<Account>) {
 
     }
     async verifyUserCredentials(credentials: UserSigninModel): Promise<ResponseData<ActiveUserCredentialsModel>> {        
-        if(!Object.values(credentials).every(v => v)){
-            return {
-                code: 1,
-                status: 500,
-                message: "Credentials is invalid.",
-                data: null
-            }
-        }
-        else {
-            const result = await this.userCredential.findOne({
-                select: {
-                    email: true,
-                    firstname: true,
-                    middlename: true,
-                    lastname: true,
-                    contactno: true,
-                    municipality: true,
-                    province: true,
-                    barangay: true,
-                },
-                where: {
-                    email: credentials.email,
-                    password: credentials.password
+        try{
+            if(!Object.values(credentials).every(v => v)){
+                return {
+                    code: 1,
+                    status: 500,
+                    message: "Credentials is invalid.",
+                    data: null
                 }
-            });
-            
-            if(!result) {
+            }
+            else {
+                const accountCred = await this.accountCred.findOne({
+                    select: {
+                        userId: true
+                    },
+                    where: {
+                        email: credentials.email,
+                        password: credentials.password
+                    }
+                });
+                
+                const result = await this.userCredential.findOne({
+                    select: {
+                        email: true,
+                        firstname: true,
+                        middlename: true,
+                        lastname: true,
+                        contactno: true,
+                        municipality: true,
+                        province: true,
+                        barangay: true,
+                    },
+                    where: {
+                        id: accountCred.userId
+                    }
+                });
+
+                if(!accountCred) {
+                    return {
+                        code: 0,
+                        status: 401,
+                        message: "Credentials is invalid.",
+                        data: {
+                            email: '',
+                            firstname: '',
+                            middlename: '',
+                            lastname: '',
+                            address: ''
+                        }
+                    }
+                }
+                
                 return {
                     code: 0,
-                    status: 401,
-                    message: "Credentials is invalid.",
+                    status: 200,
+                    message: "Credentials is valid.",
                     data: {
-                        email: '',
-                        firstname: '',
-                        middlename: '',
-                        lastname: '',
-                        address: ''
+                        email: result.email,
+                        firstname: result.firstname,
+                        middlename: result.middlename,
+                        lastname: result.lastname,
+                        address: `${result.municipality}, ${result.province}, ${result.barangay}`
                     }
                 }
             }
+        }
+        catch(err) {
+            console.log(err);
             
-            return {
-                code: 0,
-                status: 200,
-                message: "Credentials is valid.",
-                data: {
-                    email: result.email,
-                    firstname: result.firstname,
-                    middlename: result.middlename,
-                    lastname: result.lastname,
-                    address: `${result.municipality}, ${result.province}, ${result.barangay}`
-                }
-            }
+            return new Promise((resolve, reject) => {
+                resolve({
+                    code: 0,
+                    status: 500,
+                    message: "Something went wrong.",
+                    data: {
+                        email: "",
+                        firstname: "",
+                        middlename: "",
+                        lastname: "",
+                        address: ""
+                    }
+                })
+            })
         }
     }
 }

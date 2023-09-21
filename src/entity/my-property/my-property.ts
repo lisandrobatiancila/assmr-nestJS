@@ -4,7 +4,8 @@ import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 export class Vehicle {
     @PrimaryGeneratedColumn()
     id: number
-
+    @Column()
+    userId: number
     @Column()
     brand: string
     @Column()
@@ -21,4 +22,26 @@ export class Vehicle {
     installmentduration: string
     @Column()
     delinquent: string
+    @Column()
+    description: string
+}
+
+@Entity()
+export class VehicleImage {
+    @PrimaryGeneratedColumn()
+    id: number
+    @Column()
+    vehicleID: number
+    @Column()
+    vehicleFrontIMG: string
+    @Column()
+    vehicleRightIMG: string
+    @Column()
+    vehicleLeftIMG: string
+    @Column()
+    vehicleBackIMG: string
+    @Column()
+    vehicleCRIMG: string
+    @Column()
+    vehicleORIMG: string
 }
