@@ -5,12 +5,12 @@ import { AddressModule } from './controllers/address/address.module';
 import { SignupModule } from './controllers/signup/signup.module';
 import { SignupService } from './service/signup/signup.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Account } from './entity/signup/signup.entity';
+import { Account, User } from './entity/signup/signup.entity';
 import { SigninService } from './service/signin/signin.service';
 import { SigninModule } from './controllers/signin/signin.module';
-import { MyPropertyController } from './controllers/my-property/my-property.controller';
 import { MyPropertyModule } from './controllers/my-property/my-property.module';
 import { MyPropertyService } from './service/my-property/my-property.service';
+import { Vehicle, VehicleImage } from './entity/my-property/my-property';
 
 @Module({
   imports: [AddressModule, SignupModule,
@@ -20,8 +20,8 @@ import { MyPropertyService } from './service/my-property/my-property.service';
       port: 3306,
       username: 'root',
       password: '',
-      database: 'assmr2',
-      entities: [Account], // list your entity here
+      database: 'assmr',
+      entities: [User, Account, Vehicle, VehicleImage], // list your entity here
       synchronize: true
     }),
     SigninModule,

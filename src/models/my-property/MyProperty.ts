@@ -17,3 +17,16 @@ export interface UploadVehicleIMGPropertyModel {
     type: string,
     uri: string
 } // used this model when user POST an image of vehicle property
+
+export interface MyVehiclePropertyModel {
+    id: number,
+    brand: string,
+    model: string,
+    owner: string,
+    downpayment: string,
+    location: string,
+    installmentpaid: string,
+    installmentduration: string,
+    delinquent: string,
+    description: string
+}
