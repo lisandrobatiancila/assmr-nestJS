@@ -60,7 +60,7 @@ export class MyPropertyService {
 
         return response;
     }
-    async getActiveUserProperty(email: string): Promise<ResponseData<MyVehiclePropertyModel[]>> {
+    async getActiveUserProperty(email: string): Promise<ResponseData<MyVehiclePropertyModel>> {
         const activeUser = await this.userEntity.findOne({
             select: {
                 id: true
@@ -72,25 +72,16 @@ export class MyPropertyService {
 
         const userId = activeUser.id;
 
-        const vehicleLists = await this.vehicleEntity.find({
-            select: {},
-            where: {
-                userId: userId
-            }
-        });
-
-        const vehicleImages = await this.vehicleIMGEntity.findOne({
-            select: {},
-            where: {
-                vehicleID: vehicleLists[0].id
-            }
-        });
+        const res = await this.vehicleEntity.createQueryBuilder('vehicle')
+            .innerJoinAndMapOne('vehicle.vehicleIMG', 'vehicle_image', 'vehicle_image', 'vehicle_image.vehicleID = vehicle.id')
+            .where("vehicle.userID =:userID", {userID: userId})
+            .getOne();
         
         return {
             code: 0,
             status: 200,
             message: "Fetching vehicle properties",
-            data: []
+            data: res
         }
     }
 }
