@@ -1,6 +1,8 @@
-import { Body, Controller, Get, Param, Post, UploadedFile, UploadedFiles, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Res, StreamableFile, UploadedFile, UploadedFiles, UseInterceptors } from '@nestjs/common';
 import { AnyFilesInterceptor, FileInterceptor, FilesInterceptor, MulterModule } from '@nestjs/platform-express';
+import { createReadStream } from 'fs';
 import { diskStorage } from 'multer';
+import { join } from 'path';
 import { MyVehiclePropertyModel } from 'src/models/my-property/MyProperty';
 import { VehicleOwnerModel } from 'src/models/user/UserModel';
 import { MyPropertyService } from 'src/service/my-property/my-property.service';
@@ -44,6 +46,5 @@ export class MyPropertyController {
     } // get all vehicles of active user
     @Get("vehicle")
     getAllVehicles() {
-
     } // get all vehicles for assumption display
 }
