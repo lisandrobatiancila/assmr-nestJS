@@ -41,7 +41,7 @@ export class MyPropertyController {
         }
     }
     @Get("vehicles/:email")
-    getActiveUserVehicles(@Param("email") email: string): Promise<ResponseData<MyVehiclePropertyModel>> {
+    getActiveUserVehicles(@Param("email") email: string): Promise<ResponseData<MyVehiclePropertyModel[]>> {
         return this.propertyService.getActiveUserProperty(email)
     } // get all vehicles of active user
     @Get("vehicle")

@@ -25,7 +25,7 @@ import { join } from 'path';
       port: 3306,
       username: 'root',
       password: '',
-      database: 'assmr',
+      database: 'assmr2',
       entities: [User, Account, Vehicle, VehicleImage], // list your entity here
       synchronize: true
     }),
