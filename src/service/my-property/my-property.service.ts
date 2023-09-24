@@ -60,7 +60,7 @@ export class MyPropertyService {
 
         return response;
     }
-    async getActiveUserProperty(email: string): Promise<ResponseData<MyVehiclePropertyModel>> {
+    async getActiveUserProperty(email: string): Promise<ResponseData<MyVehiclePropertyModel[]>> {
         const activeUser = await this.userEntity.findOne({
             select: {
                 id: true
@@ -73,9 +73,9 @@ export class MyPropertyService {
         const userId = activeUser.id;
 
         const res = await this.vehicleEntity.createQueryBuilder('vehicle')
-            .innerJoinAndMapOne('vehicle.vehicleIMG', 'vehicle_image', 'vehicle_image', 'vehicle_image.vehicleID = vehicle.id')
+            .innerJoinAndMapMany('vehicle.vehicleIMG', 'vehicle_image', 'vehicle_image', 'vehicle_image.vehicleID = vehicle.id')
             .where("vehicle.userID =:userID", {userID: userId})
-            .getOne();
+            .getMany();
         
         return {
             code: 0,

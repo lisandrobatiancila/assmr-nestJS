@@ -30,6 +30,21 @@ export class SigninService {
                     }
                 });
                 
+                if(!accountCred) {
+                    return {
+                        code: 0,
+                        status: 401,
+                        message: "Credentials is invalid.",
+                        data: {
+                            email: '',
+                            firstname: '',
+                            middlename: '',
+                            lastname: '',
+                            address: ''
+                        }
+                    }
+                }
+                
                 const result = await this.userCredential.findOne({
                     select: {
                         email: true,
@@ -46,21 +61,6 @@ export class SigninService {
                     }
                 });
 
-                if(!accountCred) {
-                    return {
-                        code: 0,
-                        status: 401,
-                        message: "Credentials is invalid.",
-                        data: {
-                            email: '',
-                            firstname: '',
-                            middlename: '',
-                            lastname: '',
-                            address: ''
-                        }
-                    }
-                }
-                
                 return {
                     code: 0,
                     status: 200,
