@@ -8,10 +8,8 @@ import { Account } from 'src/entity/signup/signup.entity';
 @Module({
   controllers: [SignupController],
   providers: [SignupService],
-  imports: [TypeOrmModule.forFeature([Account])]
+  imports: [TypeOrmModule.forFeature([Account])],
 })
 export class SignupModule {
-  constructor(private dataSource: DataSource) {
-    
-  }
+  constructor(private dataSource: DataSource) {}
 }
