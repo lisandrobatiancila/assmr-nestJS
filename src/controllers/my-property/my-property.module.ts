@@ -6,9 +6,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/entity/signup/signup.entity';
 
 @Module({
-    controllers: [MyPropertyController],
-    providers: [MyPropertyService],
-    imports: [TypeOrmModule.forFeature([Vehicle, VehicleImage, User])],
-    exports: [TypeOrmModule]
+  controllers: [MyPropertyController],
+  providers: [MyPropertyService],
+  imports: [TypeOrmModule.forFeature([Vehicle, VehicleImage, User])],
+  exports: [TypeOrmModule],
 })
 export class MyPropertyModule {}

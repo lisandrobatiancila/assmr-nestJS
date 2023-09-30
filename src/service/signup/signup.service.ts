@@ -6,35 +6,57 @@ import { DataSource, Repository } from 'typeorm';
 
 @Injectable()
 export class SignupService {
-    constructor(private dataSource: DataSource, @InjectRepository(Account) private accountEntity: Repository<Account>) {
-        
-    }
-    async createUser(userForm: UserSignupModel): Promise<ResponseData<[]>> {
-        const { firstname, middlename, lastname, contactno, gender, municipality, province, barangay, email, password } = userForm;
+  constructor(
+    private dataSource: DataSource,
+    @InjectRepository(Account) private accountEntity: Repository<Account>,
+  ) {}
+  async createUser(userForm: UserSignupModel): Promise<ResponseData<[]>> {
+    const {
+      firstname,
+      middlename,
+      lastname,
+      contactno,
+      gender,
+      municipality,
+      province,
+      barangay,
+      email,
+      password,
+    } = userForm;
 
-        const user = await this.dataSource.createQueryBuilder()
-            .insert()
-            .into(User)
-            .values({
-                firstname, middlename, lastname, contactno, gender, municipality, province, barangay, email
-            })
-            .execute();
-        
-        this.accountEntity.createQueryBuilder()
-            .insert()
-            .into(Account)
-            .values({
-                userId: user.raw.insertId,
-                email,
-                password
-            })
-            .execute();
+    const user = await this.dataSource
+      .createQueryBuilder()
+      .insert()
+      .into(User)
+      .values({
+        firstname,
+        middlename,
+        lastname,
+        contactno,
+        gender,
+        municipality,
+        province,
+        barangay,
+        email,
+      })
+      .execute();
 
-        return {
-            code: 0,
-            status: 200,
-            message: "New user created.",
-            data: []
-        }
-    }
+    this.accountEntity
+      .createQueryBuilder()
+      .insert()
+      .into(Account)
+      .values({
+        userId: user.raw.insertId,
+        email,
+        password,
+      })
+      .execute();
+
+    return {
+      code: 0,
+      status: 200,
+      message: 'New user created.',
+      data: [],
+    };
+  }
 }

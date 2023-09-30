@@ -13,11 +13,16 @@ import { MyPropertyService } from './service/my-property/my-property.service';
 import { Vehicle, VehicleImage } from './entity/my-property/my-property';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { PropertyAssumptionsController } from './controllers/property-assumptions/property-assumptions.controller';
+import { PropertyAssumptionsModule } from './controllers/property-assumptions/property-assumptions.module';
+import { PropertyAsssumptionsService } from './service/property-asssumptions/property-asssumptions.service';
 
 @Module({
-  imports: [AddressModule, SignupModule,
+  imports: [
+    AddressModule,
+    SignupModule,
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'public')
+      rootPath: join(__dirname, '..', 'public'),
     }),
     TypeOrmModule.forRoot({
       type: 'mysql',
@@ -25,14 +30,15 @@ import { join } from 'path';
       port: 3306,
       username: 'root',
       password: '',
-      database: 'assmr2',
+      database: 'assmr',
       entities: [User, Account, Vehicle, VehicleImage], // list your entity here
-      synchronize: true
+      synchronize: true,
     }),
     SigninModule,
-    MyPropertyModule
+    MyPropertyModule,
+    PropertyAssumptionsModule,
   ],
-  controllers: [AppController],
-  providers: [AppService, SignupService, SigninService, MyPropertyService],
+  controllers: [AppController, PropertyAssumptionsController],
+  providers: [AppService, SignupService, SigninService, MyPropertyService, PropertyAsssumptionsService],
 })
 export class AppModule {}

@@ -8,6 +8,6 @@ import { Account, User } from 'src/entity/signup/signup.entity';
   controllers: [SigninController],
   providers: [SigninService],
   imports: [TypeOrmModule.forFeature([User, Account])],
-  exports: [TypeOrmModule] // important
+  exports: [TypeOrmModule], // important
 })
 export class SigninModule {}
