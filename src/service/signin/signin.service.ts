@@ -17,7 +17,7 @@ export class SigninService {
   async verifyUserCredentials(
     credentials: UserSigninModel,
   ): Promise<ResponseData<ActiveUserCredentialsModel>> {
-    try {
+    try {      
       if (!Object.values(credentials).every((v) => v)) {
         return {
           code: 1,
@@ -66,7 +66,7 @@ export class SigninService {
             id: accountCred.userId,
           },
         });
-
+        
         return {
           code: 0,
           status: 200,
