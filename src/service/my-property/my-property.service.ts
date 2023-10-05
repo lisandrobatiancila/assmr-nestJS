@@ -54,7 +54,7 @@ export class MyPropertyService {
       .insert()
       .into(VehicleImage)
       .values({
-        vehiclesID: vehicleID,
+        vehicleId: vehicleID,
         vehicleFrontIMG: JSON.stringify(pathLists),
       })
       .execute();
@@ -88,7 +88,7 @@ export class MyPropertyService {
         'vehicle.vehicleIMG',
         'vehicle_image',
         'vehicle_image',
-        'vehicle_image.vehiclesID = vehicle.id',
+        'vehicle_image.vehicleID = vehicle.id',
       )
       .where('vehicle.userID =:userID', { userID: userId })
       .getMany();

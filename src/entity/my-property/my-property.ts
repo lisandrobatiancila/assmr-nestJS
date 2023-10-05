@@ -46,7 +46,7 @@ export class VehicleImage {
   @PrimaryGeneratedColumn()
   id: number;
   @Column()
-  vehiclesID: number;
+  vehicleId: number;
   @Column()
   vehicleFrontIMG: string;
   @Column()
