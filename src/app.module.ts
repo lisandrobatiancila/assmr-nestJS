@@ -16,6 +16,10 @@ import { join } from 'path';
 import { PropertyAssumptionsController } from './controllers/property-assumptions/property-assumptions.controller';
 import { PropertyAssumptionsModule } from './controllers/property-assumptions/property-assumptions.module';
 import { PropertyAsssumptionsService } from './service/property-asssumptions/property-asssumptions.service';
+import {
+  Assumer,
+  Assumption,
+} from './entity/property-assumption/PropertyAssumption';
 
 @Module({
   imports: [
@@ -31,7 +35,7 @@ import { PropertyAsssumptionsService } from './service/property-asssumptions/pro
       username: 'root',
       password: '',
       database: 'assmr',
-      entities: [User, Account, Vehicle, VehicleImage], // list your entity here
+      entities: [User, Account, Vehicle, VehicleImage, Assumer, Assumption], // list your entity here
       synchronize: true,
     }),
     SigninModule,
@@ -39,6 +43,12 @@ import { PropertyAsssumptionsService } from './service/property-asssumptions/pro
     PropertyAssumptionsModule,
   ],
   controllers: [AppController, PropertyAssumptionsController],
-  providers: [AppService, SignupService, SigninService, MyPropertyService, PropertyAsssumptionsService],
+  providers: [
+    AppService,
+    SignupService,
+    SigninService,
+    MyPropertyService,
+    PropertyAsssumptionsService,
+  ],
 })
 export class AppModule {}

@@ -17,7 +17,7 @@ export class SigninService {
   async verifyUserCredentials(
     credentials: UserSigninModel,
   ): Promise<ResponseData<ActiveUserCredentialsModel>> {
-    try {      
+    try {
       if (!Object.values(credentials).every((v) => v)) {
         return {
           code: 1,
@@ -42,6 +42,7 @@ export class SigninService {
             status: 401,
             message: 'Credentials is invalid.',
             data: {
+              userId: 0,
               email: '',
               firstname: '',
               middlename: '',
@@ -53,6 +54,7 @@ export class SigninService {
 
         const result = await this.userCredential.findOne({
           select: {
+            id: true,
             email: true,
             firstname: true,
             middlename: true,
@@ -66,12 +68,13 @@ export class SigninService {
             id: accountCred.userId,
           },
         });
-        
+
         return {
           code: 0,
           status: 200,
           message: 'Credentials is valid.',
           data: {
+            userId: result.id,
             email: result.email,
             firstname: result.firstname,
             middlename: result.middlename,
@@ -89,6 +92,7 @@ export class SigninService {
           status: 500,
           message: 'Something went wrong.',
           data: {
+            userId: 0,
             email: '',
             firstname: '',
             middlename: '',
