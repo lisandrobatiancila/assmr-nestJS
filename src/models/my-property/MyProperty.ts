@@ -43,3 +43,16 @@ export interface MyVehicleIMGModel {
   vehicleCRIMG: string;
   vehicleORIMG: string;
 } // used this when fetching vehicle images from DB
+
+export interface UpdateVehicleInformationModel {
+  id: number; // vehicleID
+  brand: string;
+  model: string;
+  owner: string;
+  downpayment: string;
+  location: string;
+  installmentpaid: string;
+  installmentduration: string;
+  delinquent: string;
+  description: string;
+}

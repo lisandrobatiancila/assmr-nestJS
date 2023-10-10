@@ -10,7 +10,10 @@ import {
 } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
-import { MyVehiclePropertyModel } from 'src/models/my-property/MyProperty';
+import {
+  MyVehiclePropertyModel,
+  UpdateVehicleInformationModel,
+} from 'src/models/my-property/MyProperty';
 import { VehicleOwnerModel } from 'src/models/user/UserModel';
 import { MyPropertyService } from 'src/service/my-property/my-property.service';
 
@@ -57,4 +60,15 @@ export class MyPropertyController {
   } // get all vehicles of active user
   @Get('vehicle')
   getAllVehicles() {} // get all vehicles for assumption display
+  @Get('certain-vehicle/:vehicleID')
+  getCertainVehicle(@Param() param: any) {
+    const { vehicleID } = param;
+    return this.propertyService.getCertainVehicle(vehicleID);
+  }
+  @Post('update-certain-vehicle')
+  updateCertainVehicleInfo(
+    @Body() vehicleInfo: UpdateVehicleInformationModel,
+  ): Promise<ResponseData<string>> {
+    return this.propertyService.updateCertainVehicle(vehicleInfo);
+  }
 }
