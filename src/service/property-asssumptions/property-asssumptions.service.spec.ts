@@ -9,7 +9,9 @@ describe('PropertyAsssumptionsService', () => {
       providers: [PropertyAsssumptionsService],
     }).compile();
 
-    service = module.get<PropertyAsssumptionsService>(PropertyAsssumptionsService);
+    service = module.get<PropertyAsssumptionsService>(
+      PropertyAsssumptionsService,
+    );
   });
 
   it('should be defined', () => {

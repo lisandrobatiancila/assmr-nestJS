@@ -17,6 +17,7 @@ export interface UserSigninModel {
 } // basta mo login ang user
 
 export interface ActiveUserCredentialsModel {
+  userId: number;
   email: string;
   firstname: string;
   middlename: string;
