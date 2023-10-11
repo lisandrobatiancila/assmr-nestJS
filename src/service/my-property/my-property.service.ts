@@ -2,7 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Vehicle, VehicleImage } from 'src/entity/my-property/my-property';
 import { User } from 'src/entity/signup/signup.entity';
-import { MyVehiclePropertyModel } from 'src/models/my-property/MyProperty';
+import {
+  MyVehiclePropertyModel,
+  UpdateVehicleInformationModel,
+} from 'src/models/my-property/MyProperty';
 import { VehicleOwnerModel } from 'src/models/user/UserModel';
 import { Repository } from 'typeorm';
 
@@ -98,6 +101,32 @@ export class MyPropertyService {
       status: 200,
       message: 'Fetching vehicle properties',
       data: res,
+    };
+  }
+  async getCertainVehicle(vehicleID: number) {
+    const vehicle = await this.vehicleEntity
+      .createQueryBuilder('vehicle')
+      .leftJoinAndSelect('vehicle.vehicleImages', 'vehicleIMG')
+      .where('vehicle.id =:vehicleID', { vehicleID })
+      .getOne();
+
+    return {
+      code: 200,
+      status: 1,
+      message: 'You certain vehicle',
+      data: vehicle,
+    };
+  }
+  async updateCertainVehicle(
+    vehicleInfo: UpdateVehicleInformationModel,
+  ): Promise<ResponseData<string>> {
+    const { brand } = vehicleInfo;
+
+    return {
+      code: 200,
+      status: 1,
+      message: `Certain vehicle update.`,
+      data: `${brand} Vehicle was updated.`,
     };
   }
 }

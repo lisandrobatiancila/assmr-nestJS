@@ -29,7 +29,7 @@ export class Assumption {
   @Column()
   property_id: number;
   @Column()
-  assumer_id: number;
+  assumerId: number;
   @Column()
   propowner_id: number;
   @Column()
@@ -37,5 +37,5 @@ export class Assumption {
 
   @OneToOne(() => Assumption)
   @JoinColumn()
-  assumption: Assumer;
+  assumer: Assumer;
 }
