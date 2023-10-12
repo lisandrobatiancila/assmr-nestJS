@@ -1,13 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Vehicle, VehicleImage } from 'src/entity/my-property/my-property';
+import {
+  Assumer,
+  Assumption,
+} from 'src/entity/property-assumption/PropertyAssumption';
 import { User } from 'src/entity/signup/signup.entity';
 import {
   MyVehiclePropertyModel,
   UpdateVehicleInformationModel,
 } from 'src/models/my-property/MyProperty';
 import { VehicleOwnerModel } from 'src/models/user/UserModel';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 
 @Injectable()
 export class MyPropertyService {
@@ -16,6 +20,9 @@ export class MyPropertyService {
     @InjectRepository(VehicleImage)
     private vehicleIMGEntity: Repository<VehicleImage>,
     @InjectRepository(User) private userEntity: Repository<User>,
+    @InjectRepository(Assumer) private assumerEntity: Repository<Assumer>,
+    @InjectRepository(Assumption)
+    private assumptionEntity: Repository<Assumption>,
   ) {}
   async uploadVehicleProperty(
     uploaderInfo: VehicleOwnerModel,
@@ -94,6 +101,7 @@ export class MyPropertyService {
         'vehicle_image.vehicleID = vehicle.id',
       )
       .where('vehicle.userID =:userID', { userID: userId })
+      .andWhere('vehicle.isDropped = 0')
       .getMany();
 
     return {
@@ -120,7 +128,35 @@ export class MyPropertyService {
   async updateCertainVehicle(
     vehicleInfo: UpdateVehicleInformationModel,
   ): Promise<ResponseData<string>> {
-    const { brand } = vehicleInfo;
+    const {
+      id,
+      brand,
+      model,
+      owner,
+      downpayment,
+      location,
+      installmentpaid,
+      installmentduration,
+      delinquent,
+      description,
+    }: UpdateVehicleInformationModel = vehicleInfo;
+
+    this.vehicleEntity
+      .createQueryBuilder('vehicle')
+      .update(Vehicle)
+      .set({
+        brand,
+        model,
+        owner,
+        downpayment,
+        location,
+        installmentpaid,
+        installmentduration,
+        delinquent,
+        description,
+      })
+      .where('vehicle.id =:vehicleID', { vehicleID: id })
+      .execute();
 
     return {
       code: 200,
@@ -128,5 +164,34 @@ export class MyPropertyService {
       message: `Certain vehicle update.`,
       data: `${brand} Vehicle was updated.`,
     };
+  }
+  async removeCertainVehicle(param: any): Promise<ResponseData<string>> {
+    const { vehicleID } = param;
+    this.vehicleEntity
+      .createQueryBuilder('vehicle')
+      .update(Vehicle)
+      .set({
+        isDropped: '1',
+      })
+      .where('vehicle.id =:vehicleID', { vehicleID })
+      .execute();
+    console.log(vehicleID);
+
+    return {
+      code: 200,
+      status: 1,
+      message: 'Vehicle was removed.',
+      data: 'Certain vehicle was removed.',
+    };
+  }
+  async getAllMyAssumedProperty(param: { userId: number }) {
+    console.log(param);
+
+    const assumer = await this.assumerEntity
+      .createQueryBuilder('assumer')
+      .where('userId =:userId', { userId: 1 })
+      .select(['transaction_date']);
+
+    console.log(assumer);
   }
 }

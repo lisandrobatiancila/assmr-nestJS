@@ -4,11 +4,23 @@ import { Vehicle, VehicleImage } from 'src/entity/my-property/my-property';
 import { MyPropertyService } from 'src/service/my-property/my-property.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/entity/signup/signup.entity';
+import {
+  Assumer,
+  Assumption,
+} from 'src/entity/property-assumption/PropertyAssumption';
 
 @Module({
   controllers: [MyPropertyController],
   providers: [MyPropertyService],
-  imports: [TypeOrmModule.forFeature([Vehicle, VehicleImage, User])],
+  imports: [
+    TypeOrmModule.forFeature([
+      Vehicle,
+      VehicleImage,
+      User,
+      Assumer,
+      Assumption,
+    ]),
+  ],
   exports: [TypeOrmModule],
 })
 export class MyPropertyModule {}

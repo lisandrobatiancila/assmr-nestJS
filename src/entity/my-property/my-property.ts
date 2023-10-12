@@ -33,6 +33,8 @@ export class Vehicle {
   delinquent: string;
   @Column()
   description: string;
+  @Column()
+  isDropped: string;
 
   @ManyToOne((type) => User, (user) => user.vehicles)
   user: User;

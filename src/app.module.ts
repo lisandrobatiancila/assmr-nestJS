@@ -20,6 +20,9 @@ import {
   Assumer,
   Assumption,
 } from './entity/property-assumption/PropertyAssumption';
+import { AssumedPropertyService } from './service/assumed-property/assumed-property.service';
+import { AssumedPropertyController } from './controllers/assumed-property/assumed-property.controller';
+import { AssumedPropertyModule } from './controllers/assumed-property/assumed-property.module';
 
 @Module({
   imports: [
@@ -41,14 +44,16 @@ import {
     SigninModule,
     MyPropertyModule,
     PropertyAssumptionsModule,
+    AssumedPropertyModule,
   ],
-  controllers: [AppController, PropertyAssumptionsController],
+  controllers: [AppController, PropertyAssumptionsController, AssumedPropertyController],
   providers: [
     AppService,
     SignupService,
     SigninService,
     MyPropertyService,
     PropertyAsssumptionsService,
+    AssumedPropertyService,
   ],
 })
 export class AppModule {}

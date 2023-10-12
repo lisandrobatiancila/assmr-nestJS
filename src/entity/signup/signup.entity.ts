@@ -3,6 +3,7 @@ import { type } from 'os';
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { Vehicle } from '../my-property/my-property';
 import { MyVehiclePropertyModel } from 'src/models/my-property/MyProperty';
+import { Assumer, Assumption } from '../property-assumption/PropertyAssumption';
 
 @Entity()
 export class User {
@@ -29,6 +30,11 @@ export class User {
 
   @OneToMany((type) => Vehicle, (vehicle) => vehicle?.user)
   vehicles: MyVehiclePropertyModel[];
+  @OneToMany((type) => Assumer, (assumer) => assumer.user)
+  assumers: Assumer[];
+
+  @OneToMany((type) => Assumption, (assumption) => assumption.user)
+  assumption: Assumption[];
 }
 
 @Entity()

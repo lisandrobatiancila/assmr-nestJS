@@ -3,21 +3,26 @@ import {
   Column,
   Entity,
   JoinColumn,
+  ManyToOne,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { User } from '../signup/signup.entity';
 
 @Entity()
 export class Assumer {
   @PrimaryGeneratedColumn()
   id: number;
   @Column()
-  user_id: number;
+  userId: number;
   @Column()
   assumer_income: string;
   @Column()
   assumer_work: string;
+
+  @ManyToOne((type) => User, (user) => user.assumers)
+  user: User;
 }
 
 @Entity()
@@ -25,7 +30,7 @@ export class Assumption {
   @PrimaryGeneratedColumn()
   id: number;
   @Column()
-  user_id: number;
+  userId: number;
   @Column()
   property_id: number;
   @Column()
@@ -33,9 +38,14 @@ export class Assumption {
   @Column()
   propowner_id: number;
   @Column()
+  isActive: string;
+  @Column()
   transaction_date: Date;
 
-  @OneToOne(() => Assumption)
+  @OneToOne(() => Assumer)
   @JoinColumn()
   assumer: Assumer;
+
+  @ManyToOne((type) => User, (user) => user.assumption)
+  user: User;
 }

@@ -26,7 +26,7 @@ export class PropertyAssumptionsController {
     @Body() assumptBody: PropertyAssumptionModel,
   ): Promise<ResponseData<string>> {
     return this.propAssumpService.assumeVehicleProperty(assumptBody);
-  }
+  } // vehicle assumption
   @Get('/certain-vehicle/:vehicleId')
   getCertainVehicle(
     @Param() vehicleId: { vehicleId: number },
