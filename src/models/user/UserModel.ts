@@ -23,6 +23,7 @@ export interface ActiveUserCredentialsModel {
   middlename: string;
   lastname: string;
   address: string;
+  contactno: string;
 } // basta accepted ang credentials sa user mao ni e return na mga info
 
 export interface VehicleOwnerModel {
@@ -37,3 +38,10 @@ export interface VehicleOwnerModel {
   delinquent: string;
   description: string;
 } // used for uploading vehicle property
+
+export interface UpdateUserInformationModel extends UserSigninModel {
+  firstname: string;
+  middlename: string;
+  lastname: string;
+  contactno: string;
+}
