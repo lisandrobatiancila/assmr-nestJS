@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Account, User } from 'src/entity/signup/signup.entity';
 import {
   ActiveUserCredentialsModel,
+  UpdateUserInformationModel,
   UserSigninModel,
 } from 'src/models/user/UserModel';
 import { Repository } from 'typeorm';
@@ -48,6 +49,7 @@ export class SigninService {
               middlename: '',
               lastname: '',
               address: '',
+              contactno: '',
             },
           };
         }
@@ -80,6 +82,7 @@ export class SigninService {
             middlename: result.middlename,
             lastname: result.lastname,
             address: `${result.municipality}, ${result.province}, ${result.barangay}`,
+            contactno: result.contactno,
           },
         };
       }
@@ -98,9 +101,62 @@ export class SigninService {
             middlename: '',
             lastname: '',
             address: '',
+            contactno: '',
           },
         });
       });
     }
+  }
+  async updateCredentials(
+    params: UpdateUserInformationModel,
+  ): Promise<ResponseData<string>> {
+    const { firstname, middlename, lastname, contactno, email, password } =
+      params;
+
+    this.accountCred
+      .createQueryBuilder('account')
+      .update(Account)
+      .set({
+        password: password,
+      })
+      .where('account.email =:email', { email })
+      .execute();
+
+    this.userCredential
+      .createQueryBuilder('user')
+      .update(User)
+      .set({
+        firstname: firstname.toLocaleLowerCase(),
+        middlename: middlename.toLocaleLowerCase(),
+        lastname: lastname.toLocaleLowerCase(),
+        contactno,
+      })
+      .where('user.email =:email', { email })
+      .execute();
+
+    return {
+      code: 200,
+      status: 1,
+      message: 'Credential was updated',
+      data: 'Credential was updated successfully.',
+    };
+  }
+  async getPassword(userEmail: string): Promise<ResponseData<string>> {
+    const Accpass = await this.accountCred.findOne({
+      select: {
+        password: true,
+      },
+      where: {
+        email: userEmail,
+      },
+    });
+    const password = Accpass.password;
+
+    return {
+      code: 200,
+      status: 1,
+      message: 'Get password',
+      data: password,
+    };
   }
 }

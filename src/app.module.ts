@@ -20,6 +20,12 @@ import {
   Assumer,
   Assumption,
 } from './entity/property-assumption/PropertyAssumption';
+
+import { AssumedPropertyService } from './service/assumed-property/assumed-property.service';
+import { AssumedPropertyController } from './controllers/assumed-property/assumed-property.controller';
+import { AssumedPropertyModule } from './controllers/assumed-property/assumed-property.module';
+import { MessagesModule } from './controllers/messages/messages.module';
+import { Messages, ReceiverMessage, SenderMessage } from './entity/messages/Messages';
 import { AssumedPropertyService } from './service/assumed-property/assumed-property.service';
 import { AssumedPropertyController } from './controllers/assumed-property/assumed-property.controller';
 import { AssumedPropertyModule } from './controllers/assumed-property/assumed-property.module';
@@ -38,12 +44,32 @@ import { AssumedPropertyModule } from './controllers/assumed-property/assumed-pr
       username: 'root',
       password: '',
       database: 'assmr',
-      entities: [User, Account, Vehicle, VehicleImage, Assumer, Assumption], // list your entity here
+      entities: [
+        User,
+        Account,
+        Vehicle,
+        VehicleImage,
+        Assumer,
+        Assumption,
+        Messages,
+        ReceiverMessage,
+        SenderMessage,
+      ], // list your entity here
       synchronize: true,
     }),
     SigninModule,
     MyPropertyModule,
     PropertyAssumptionsModule,
+  ],
+  controllers: [AppController, PropertyAssumptionsController],
+    AssumedPropertyModule,
+    MessagesModule,
+  ],
+  controllers: [
+    AppController,
+    PropertyAssumptionsController,
+    AssumedPropertyController,
+  ],
     AssumedPropertyModule,
   ],
   controllers: [AppController, PropertyAssumptionsController, AssumedPropertyController],

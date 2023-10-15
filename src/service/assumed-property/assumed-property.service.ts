@@ -30,6 +30,9 @@ export class AssumedPropertyService {
       .andWhere('vehicle.userId = user.id')
       .andWhere('vehicle.id = vehicle_image.vehicleId')
       .andWhere('assumer.userId =:userId', { userId })
+      .andWhere('assumption.userId =:userId', { userId })
+      .andWhere('assumption.property_id = vehicle.id')
+
       .andWhere('assumption.isActive =:isActive', { isActive: '1' })
       // .getQuery();
       .execute();
