@@ -56,3 +56,16 @@ export interface UpdateVehicleInformationModel {
   delinquent: string;
   description: string;
 }
+
+export interface MyAssumedProperty {
+  id: number;
+  email: string;
+  firstname: string;
+  middlename: string;
+  lastname: string;
+  contactno: string;
+  municipality: string;
+  province: string;
+  barangay: string;
+  property: UpdateVehicleInformationModel;
+}

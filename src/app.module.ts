@@ -20,14 +20,15 @@ import {
   Assumer,
   Assumption,
 } from './entity/property-assumption/PropertyAssumption';
-<<<<<<< Updated upstream
-=======
+
 import { AssumedPropertyService } from './service/assumed-property/assumed-property.service';
 import { AssumedPropertyController } from './controllers/assumed-property/assumed-property.controller';
 import { AssumedPropertyModule } from './controllers/assumed-property/assumed-property.module';
 import { MessagesModule } from './controllers/messages/messages.module';
 import { Messages, ReceiverMessage, SenderMessage } from './entity/messages/Messages';
->>>>>>> Stashed changes
+import { AssumedPropertyService } from './service/assumed-property/assumed-property.service';
+import { AssumedPropertyController } from './controllers/assumed-property/assumed-property.controller';
+import { AssumedPropertyModule } from './controllers/assumed-property/assumed-property.module';
 
 @Module({
   imports: [
@@ -59,10 +60,8 @@ import { Messages, ReceiverMessage, SenderMessage } from './entity/messages/Mess
     SigninModule,
     MyPropertyModule,
     PropertyAssumptionsModule,
-<<<<<<< Updated upstream
   ],
   controllers: [AppController, PropertyAssumptionsController],
-=======
     AssumedPropertyModule,
     MessagesModule,
   ],
@@ -71,13 +70,16 @@ import { Messages, ReceiverMessage, SenderMessage } from './entity/messages/Mess
     PropertyAssumptionsController,
     AssumedPropertyController,
   ],
->>>>>>> Stashed changes
+    AssumedPropertyModule,
+  ],
+  controllers: [AppController, PropertyAssumptionsController, AssumedPropertyController],
   providers: [
     AppService,
     SignupService,
     SigninService,
     MyPropertyService,
     PropertyAsssumptionsService,
+    AssumedPropertyService,
   ],
 })
 export class AppModule {}

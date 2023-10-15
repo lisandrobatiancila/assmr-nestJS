@@ -3,11 +3,11 @@ import { type } from 'os';
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { Vehicle } from '../my-property/my-property';
 import { MyVehiclePropertyModel } from 'src/models/my-property/MyProperty';
-<<<<<<< Updated upstream
-=======
+
 import { Assumer, Assumption } from '../property-assumption/PropertyAssumption';
 import { Messages, ReceiverMessage, SenderMessage } from '../messages/Messages';
->>>>>>> Stashed changes
+
+import { Assumer, Assumption } from '../property-assumption/PropertyAssumption';
 
 @Entity()
 export class User {
@@ -34,8 +34,7 @@ export class User {
 
   @OneToMany((type) => Vehicle, (vehicle) => vehicle?.user)
   vehicles: MyVehiclePropertyModel[];
-<<<<<<< Updated upstream
-=======
+
   @OneToMany((type) => Assumer, (assumer) => assumer.user)
   assumers: Assumer[];
 
@@ -47,7 +46,7 @@ export class User {
   receiverMessages: ReceiverMessage[];
   @OneToMany((type) => SenderMessage, (senderMess) => senderMess.user)
   senderMessages: SenderMessage[];
->>>>>>> Stashed changes
+
 }
 
 @Entity()

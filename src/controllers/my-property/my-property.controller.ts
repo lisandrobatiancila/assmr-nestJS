@@ -2,6 +2,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -70,5 +71,15 @@ export class MyPropertyController {
     @Body() vehicleInfo: UpdateVehicleInformationModel,
   ): Promise<ResponseData<string>> {
     return this.propertyService.updateCertainVehicle(vehicleInfo);
+  }
+  @Delete('remove-certain-vehicle/:vehicleID')
+  removeCertainVehicleProperty(
+    @Param() param: { vehicelID: number },
+  ): Promise<ResponseData<string>> {
+    return this.propertyService.removeCertainVehicle(param);
+  }
+  @Get('all-property-assumption/:userId')
+  getAllMyAssumedProperty(@Param() param: { userId: number }) {
+    return this.propertyService.getAllMyAssumedProperty(param);
   }
 }
