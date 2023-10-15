@@ -65,7 +65,7 @@ export class MessagesService {
       .into(ReceiverMessage)
       .values({
         email: otherUser,
-        userId: receiverId,
+        // userId: receiverId,
       })
       .execute();
     const recResId = receiverRes.raw.insertId;
@@ -76,7 +76,7 @@ export class MessagesService {
       .into(SenderMessage)
       .values({
         email: activeUser,
-        userId: senderId,
+        // userId: senderId,
       })
       .execute();
     const sendResId = senderRes.raw.insertId;
