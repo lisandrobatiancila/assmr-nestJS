@@ -4,7 +4,6 @@ import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { Vehicle } from '../my-property/my-property';
 import { MyVehiclePropertyModel } from 'src/models/my-property/MyProperty';
 
-import { Assumer, Assumption } from '../property-assumption/PropertyAssumption';
 import { Messages, ReceiverMessage, SenderMessage } from '../messages/Messages';
 
 import { Assumer, Assumption } from '../property-assumption/PropertyAssumption';
@@ -46,7 +45,6 @@ export class User {
   receiverMessages: ReceiverMessage[];
   @OneToMany((type) => SenderMessage, (senderMess) => senderMess.user)
   senderMessages: SenderMessage[];
-
 }
 
 @Entity()
