@@ -31,13 +31,43 @@ export class MessagesService {
   }: IChatWithModel): Promise<ResponseData<IChatWithMessagesModel[]>> {
     const messages = await this.messagesEntity
       .createQueryBuilder('messages')
-      .leftJoinAndSelect('messages.receiverMessage', 'receiver_message')
-      .leftJoinAndSelect('messages.senderMessage', 'sender_message')
-      .where(`receiver_message.email ='${activeUser}'`)
-      .andWhere(`sender_message.email ='${otherUser}'`)
-      .orWhere(`receiver_message.email ='${otherUser}'`)
-      .andWhere(`sender_message.email ='${activeUser}'`)
-      .getMany();
+      .leftJoinAndSelect(
+        ReceiverMessage,
+        'receiverMess',
+        'messages.receiverMessageId = receiverMess.id',
+      )
+      .leftJoinAndSelect(
+        SenderMessage,
+        'senderMess',
+        'senderMess.id = messages.senderMessageId',
+      )
+      .leftJoinAndSelect(
+        User,
+        'userReceiver',
+        'receiverMess.userId = userReceiver.id',
+      )
+      .leftJoinAndSelect(
+        User,
+        'userSender',
+        'senderMess.userId = userSender.id',
+      )
+      .where('userReceiver.email =:receiverEmail', {
+        receiverEmail: activeUser,
+      })
+      .andWhere('userSender.email =:senderEmail', { senderEmail: otherUser })
+      .orWhere('userReceiver.email =:receiverEmail', {
+        receiverEmail: otherUser,
+      })
+      .andWhere('userSender.email =:senderEmail', { senderEmail: activeUser })
+      .groupBy('messages.id')
+      .select([
+        'messages',
+        'userReceiver',
+        'userSender',
+        'receiverMess',
+        'senderMess',
+      ])
+      .getRawMany();
     console.log(messages);
 
     return {
@@ -59,29 +89,29 @@ export class MessagesService {
     const { receiverId, senderId, message, activeUser, otherUser } =
       messageData;
 
-    const receiverRes = await this.messagesEntity
+    const receiverRes = await this.receiverMessEntity
       .createQueryBuilder('messages')
       .insert()
       .into(ReceiverMessage)
       .values({
         email: otherUser,
-        // userId: receiverId,
+        userId: receiverId,
       })
       .execute();
     const recResId = receiverRes.raw.insertId;
 
-    const senderRes = await this.messagesEntity
+    const senderRes = await this.senderMessEntity
       .createQueryBuilder('senderMessage')
       .insert()
       .into(SenderMessage)
       .values({
         email: activeUser,
-        // userId: senderId,
+        userId: senderId,
       })
       .execute();
     const sendResId = senderRes.raw.insertId;
 
-    this.receiverMessEntity
+    this.messagesEntity
       .createQueryBuilder('messages')
       .insert()
       .into(Messages)
@@ -115,8 +145,8 @@ export class MessagesService {
       .createQueryBuilder('messages')
       .leftJoinAndSelect('messages.receiverMessage', 'receiver_message')
       .leftJoinAndSelect('messages.senderMessage', 'sender_message')
-      .leftJoinAndSelect('receiver_message.user', 'user1')
-      .leftJoinAndSelect('sender_message.user', 'user2')
+      .leftJoinAndSelect('receiver_message.user', 'receiverU')
+      .leftJoinAndSelect('sender_message.user', 'SenderU')
       .where('receiver_message.email =:receiver_email', {
         receiver_email: activeUserEmail,
       })
@@ -125,6 +155,8 @@ export class MessagesService {
       })
       .where(`messages.id IN (${subQuery.getQuery()})`)
       .getMany();
+    // .getSql();
+    console.log(messageList);
 
     return {
       code: 200,

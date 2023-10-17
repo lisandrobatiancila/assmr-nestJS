@@ -1,6 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { type } from 'os';
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  OneToMany,
+  OneToOne,
+  ManyToOne,
+} from 'typeorm';
 import { Vehicle } from '../my-property/my-property';
 import { MyVehiclePropertyModel } from 'src/models/my-property/MyProperty';
 
@@ -41,10 +48,10 @@ export class User {
   assumption: Assumption[];
   @OneToMany((type) => Messages, (messages) => messages.message)
   messages: Messages[];
-  @OneToMany((type) => ReceiverMessage, (receiverMess) => receiverMess.user)
-  receiverMessages: ReceiverMessage[];
-  @OneToMany((type) => SenderMessage, (senderMess) => senderMess.user)
-  senderMessages: SenderMessage[];
+  // @ManyToOne((type) => ReceiverMessage, (receiverMess) => receiverMess.user)
+  // receiverMessage: ReceiverMessage;
+  // @ManyToOne((type) => SenderMessage, (senderMess) => senderMess.user)
+  // senderMessage: SenderMessage;
 }
 
 @Entity()

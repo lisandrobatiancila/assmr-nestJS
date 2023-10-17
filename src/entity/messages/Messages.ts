@@ -16,11 +16,10 @@ export class ReceiverMessage {
   id: number;
   @Column()
   email: string;
-  @Column({ unique: true })
+  @Column()
   userId: number;
-  @ManyToOne((type) => User, (user) => user.receiverMessages)
-  @JoinColumn({ name: 'userId' })
-  user: User;
+  // @ManyToOne((type) => User)
+  // user: User;
 }
 
 @Entity()
@@ -31,9 +30,8 @@ export class SenderMessage {
   email: string;
   @Column()
   userId: number;
-  @ManyToOne((type) => User, (user) => user.senderMessages)
-  @JoinColumn({ name: 'userId' })
-  user: User;
+  // @ManyToOne((type) => User)
+  // user: User;
 }
 
 @Entity()
@@ -53,10 +51,13 @@ export class Messages {
   @Column()
   date: Date;
 
-  @OneToOne((type) => ReceiverMessage)
-  @JoinColumn()
-  receiverMessage: ReceiverMessage;
-  @OneToOne((type) => SenderMessage)
-  @JoinColumn()
-  senderMessage: SenderMessage;
+  // @ManyToOne((type) => User, (user) => user.messages)
+  // @Column('int', { name: 'userId' })
+  // user: User;
+  // @OneToOne((type) => ReceiverMessage)
+  // @JoinColumn()
+  // receiverMessage: ReceiverMessage;
+  // @OneToOne((type) => SenderMessage)
+  // @JoinColumn()
+  // senderMessage: SenderMessage;
 }
