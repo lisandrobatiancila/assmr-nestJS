@@ -28,7 +28,7 @@ export class MessagesService {
   async getIChatWith({
     activeUser,
     otherUser,
-  }: IChatWithModel): Promise<ResponseData<IChatWithMessagesModel[]>> {
+  }: IChatWithModel): Promise<ResponseData<IChatWithMessagesModel[]>> {    
     const messages = await this.messagesEntity
       .createQueryBuilder('messages')
       .leftJoinAndSelect(
@@ -51,37 +51,28 @@ export class MessagesService {
         'userSender',
         'senderMess.userId = userSender.id',
       )
+      .select(['messages', 'userReceiver', 'userSender', 'receiverMess',
+      'senderMess'])
       .where('userReceiver.email =:receiverEmail', {
         receiverEmail: activeUser,
       })
-      .andWhere('userSender.email =:senderEmail', { senderEmail: otherUser })
+      .orWhere('userSender.email =:senderEmail', { senderEmail: otherUser })
       .orWhere('userReceiver.email =:receiverEmail', {
         receiverEmail: otherUser,
       })
-      .andWhere('userSender.email =:senderEmail', { senderEmail: activeUser })
+      .orWhere('userSender.email =:senderEmail', { senderEmail: activeUser })
       .groupBy('messages.id')
-      .select([
-        'messages',
-        'userReceiver',
-        'userSender',
-        'receiverMess',
-        'senderMess',
-      ])
-      .getRawMany();
-    console.log(messages);
-
+      // .getRawMany();
+      .getQuery()
+      console.log(messages);
+      
     return {
       code: 200,
       status: 1,
       message: 'IChatWith Records.',
-      data: messages as unknown as IChatWithMessagesModel[],
+      data: []
+      // data: messages as unknown as IChatWithMessagesModel[],
     }; // if naa siyay converstation sa laen user go here...
-    return {
-      code: 205,
-      status: 1,
-      message: 'IChatWith Records.',
-      data: [],
-    };
   }
   async iSendMessageWith(
     messageData: IChatSendMessageModel,
@@ -143,21 +134,32 @@ export class MessagesService {
 
     const messageList = await this.messagesEntity
       .createQueryBuilder('messages')
-      .leftJoinAndSelect('messages.receiverMessage', 'receiver_message')
-      .leftJoinAndSelect('messages.senderMessage', 'sender_message')
-      .leftJoinAndSelect('receiver_message.user', 'receiverU')
-      .leftJoinAndSelect('sender_message.user', 'SenderU')
-      .where('receiver_message.email =:receiver_email', {
+      .innerJoin(ReceiverMessage, 'receiverMess', 'messages.receiverMessageId=receiverMess.id')
+      .innerJoin(SenderMessage, 'senderMess', 'messages.senderMessageId=senderMess.id')
+      .innerJoin(User, 'userRes', 'userRes.id = receiverMess.userId OR senderMess.userId = userRes.id')
+      .innerJoin(User, 'userSend', 'userSend.id = senderMess.userId')
+      
+      .where('receiverMess.email =:receiver_email', {
         receiver_email: activeUserEmail,
       })
-      .orWhere('sender_message.email =:sender_email', {
+      .orWhere('senderMess.email =:sender_email', {
+        sender_email: activeUserEmail,
+      })
+      .orWhere('receiverMess.email =:receiver_email', {
+        receiver_email: activeUserEmail,
+      })
+      .orWhere('senderMess.email =:sender_email', {
         sender_email: activeUserEmail,
       })
       .where(`messages.id IN (${subQuery.getQuery()})`)
-      .getMany();
-    // .getSql();
-    console.log(messageList);
 
+      .select(['messages', 'receiverMess', 'senderMess', 'userRes', 'userSend'])
+      .groupBy('userRes.id')
+      .getRawMany();
+      // .getSql()
+    
+      console.log(messageList);
+      
     return {
       code: 200,
       status: 1,
