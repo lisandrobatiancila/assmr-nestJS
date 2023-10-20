@@ -141,7 +141,6 @@ export class MessagesService {
         'senderMess',
         'senderMess.id = messages.senderMessageId',
       )
-      .where(`messages.id IN (${subQuery.getQuery()})`)
       .where('receiverMess.email =:rmemailRM', { rmemailRM: activeUserEmail })
       .orWhere('senderMess.email =:smemailSM', {
         smemailSM: activeUserEmail,
@@ -152,6 +151,7 @@ export class MessagesService {
       .orWhere('senderMess.email =:smemailSMSM', {
         smemailSMSM: activeUserEmail,
       })
+      .andWhere(`messages.id IN (${subQuery.getQuery()})`)
       .select([
         'messages',
         'userSender',
@@ -159,15 +159,15 @@ export class MessagesService {
         'receiverMess',
         'senderMess',
       ])
-      // .getRawMany();
-      .getSql();
+      .getRawMany();
+      // .getSql();
 
     console.log(messageList);
     return {
       code: 200,
       status: 1,
       message: 'allMy Chattlists',
-      data: [], //messageList as unknown as IChatWithListModel[],
+      data: messageList as unknown as IChatWithListModel[],
     };
   }
 }
