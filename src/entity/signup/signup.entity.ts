@@ -14,6 +14,7 @@ import { MyVehiclePropertyModel } from 'src/models/my-property/MyProperty';
 import { Messages, ReceiverMessage, SenderMessage } from '../messages/Messages';
 
 import { Assumer, Assumption } from '../property-assumption/PropertyAssumption';
+import { UserFeedBack } from '../feedbacks/FeedBacks';
 
 @Entity()
 export class User {
@@ -52,6 +53,8 @@ export class User {
   // receiverMessage: ReceiverMessage;
   // @ManyToOne((type) => SenderMessage, (senderMess) => senderMess.user)
   // senderMessage: SenderMessage;
+  @OneToMany((type) => UserFeedBack, (feedbacks) => feedbacks.user)
+  feedBacks: UserFeedBack[];
 }
 
 @Entity()

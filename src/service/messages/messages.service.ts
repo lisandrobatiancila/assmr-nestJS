@@ -120,14 +120,13 @@ export class MessagesService {
   ): Promise<ResponseData<IChatWithListModel[]>> {
     // select * from messages m INNER JOIN user u ON u.id = m.senderId OR u.id = m.receiverId INNER JOIN receiver_message rm ON rm.id = m.receiverMessageId INNER JOIN sender_message sm ON sm.id = m.senderId WHERE (rm.email ='klent@gmail.com' AND sm.email = 'maica@gmail.com' OR rm.email ='maica@gmail.com' AND sm.email = 'klent@gmail.com') AND (rm.email ='maica@gmail.com' AND sm.email = 'klent@gmail.com' OR rm.email ='klent@gmail.com' AND sm.email = 'maica@gmail.com') GROUP by m.senderMessageId, m.receiverMessageId
     const { userId, activeUserEmail } = param;
-    console.log(param);
 
     const subQuery = this.messagesEntity
       .createQueryBuilder('messages')
       .select('MAX(messages.id)', 'max')
       .groupBy('messages.senderId, messages.receiverId');
 
-    const messageList = await this.messagesEntity
+    const messageList: any = await this.messagesEntity
       .createQueryBuilder('messages')
       .innerJoin(User, 'userSender', 'userSender.id=messages.senderId')
       .innerJoin(User, 'userReceiver', 'userReceiver.id = messages.receiverId')
@@ -141,6 +140,7 @@ export class MessagesService {
         'senderMess',
         'senderMess.id = messages.senderMessageId',
       )
+      .groupBy('messages.senderId, messages.receiverId')
       .where('receiverMess.email =:rmemailRM', { rmemailRM: activeUserEmail })
       .orWhere('senderMess.email =:smemailSM', {
         smemailSM: activeUserEmail,
@@ -152,7 +152,6 @@ export class MessagesService {
         smemailSMSM: activeUserEmail,
       })
       .andWhere(`messages.id IN (${subQuery.getQuery()})`)
-      .orderBy('messages.id', 'DESC')
       .select([
         'messages',
         'userSender',
@@ -161,24 +160,24 @@ export class MessagesService {
         'senderMess',
       ])
       .getRawMany();
-      // .getSql();
+    // .getSql();
 
-    let filteredMessages = [];
+    const filteredMessages = [];
     messageList.map((message: IChatWithListModel) => {
-      if(filteredMessages.length === 0) {
-        filteredMessages.push(message)
-      }
-      else {
+      if (filteredMessages.length === 0) {
+        filteredMessages.push(message);
+      } else {
         filteredMessages.map((fm: IChatWithListModel) => {
-          if(fm.userSend_email === message.userSend_email || fm.receiverMess_email === message.receiverMess_email) {
-            return
-          }
-          else
-          filteredMessages.push(message);
-        })
+          if (
+            fm.userSend_email === message.userSend_email ||
+            fm.receiverMess_email === message.receiverMess_email
+          ) {
+            return;
+          } else filteredMessages.push(message);
+        });
       }
-    })
-    // console.log(filteredMessages);  
+    });
+    // console.log(filteredMessages);
     // console.log(messageList);
     return {
       code: 200,
