@@ -152,6 +152,7 @@ export class MessagesService {
         smemailSMSM: activeUserEmail,
       })
       .andWhere(`messages.id IN (${subQuery.getQuery()})`)
+      .orderBy('messages.id', 'DESC')
       .select([
         'messages',
         'userSender',
@@ -162,12 +163,28 @@ export class MessagesService {
       .getRawMany();
       // .getSql();
 
-    console.log(messageList);
+    let filteredMessages = [];
+    messageList.map((message: IChatWithListModel) => {
+      if(filteredMessages.length === 0) {
+        filteredMessages.push(message)
+      }
+      else {
+        filteredMessages.map((fm: IChatWithListModel) => {
+          if(fm.userSend_email === message.userSend_email || fm.receiverMess_email === message.receiverMess_email) {
+            return
+          }
+          else
+          filteredMessages.push(message);
+        })
+      }
+    })
+    // console.log(filteredMessages);  
+    // console.log(messageList);
     return {
       code: 200,
       status: 1,
       message: 'allMy Chattlists',
-      data: messageList as unknown as IChatWithListModel[],
+      data: filteredMessages as unknown as IChatWithListModel[],
     };
   }
 }
