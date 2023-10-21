@@ -30,6 +30,10 @@ import {
 } from './entity/messages/Messages';
 import { AssumedPropertyController } from './controllers/assumed-property/assumed-property.controller';
 import { AssumedPropertyService } from './service/assumed-property/assumed-property.service';
+import { FeedbackModule } from './controllers/feedback/feedback.module';
+import { FeedbacksService } from './service/feedbacks/feedbacks.service';
+import { UserFeedBack } from './entity/feedbacks/FeedBacks';
+import { FeedbackController } from './controllers/feedback/feedback.controller';
 
 @Module({
   imports: [
@@ -40,6 +44,7 @@ import { AssumedPropertyService } from './service/assumed-property/assumed-prope
     PropertyAssumptionsModule,
     AssumedPropertyModule,
     MessagesModule,
+    FeedbackModule,
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public'),
     }),
@@ -60,6 +65,7 @@ import { AssumedPropertyService } from './service/assumed-property/assumed-prope
         Messages,
         ReceiverMessage,
         SenderMessage,
+        UserFeedBack,
       ], // list your entity here
       synchronize: true,
     }),
@@ -68,6 +74,7 @@ import { AssumedPropertyService } from './service/assumed-property/assumed-prope
     AppController,
     PropertyAssumptionsController,
     AssumedPropertyController,
+    FeedbackController,
   ],
   providers: [
     AppService,
@@ -76,6 +83,9 @@ import { AssumedPropertyService } from './service/assumed-property/assumed-prope
     MyPropertyService,
     PropertyAsssumptionsService,
     AssumedPropertyService,
+    FeedbacksService,
   ],
 })
 export class AppModule {}
+
+// https://www.cartoonpornvideos.com/category/hentai
