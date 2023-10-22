@@ -7,6 +7,7 @@ import {
 } from 'src/entity/property-assumption/PropertyAssumption';
 import { User } from 'src/entity/signup/signup.entity';
 import {
+  AssumerListModel,
   MyVehiclePropertyModel,
   UpdateVehicleInformationModel,
 } from 'src/models/my-property/MyProperty';
@@ -48,6 +49,7 @@ export class MyPropertyService {
       installmentduration: uploaderInfo.installmentduration,
       delinquent: uploaderInfo.delinquent,
       description: uploaderInfo.description,
+      isDropped: '0',
     };
 
     const vehicle = await this.vehicleEntity
@@ -91,6 +93,16 @@ export class MyPropertyService {
     });
 
     const userId = activeUser.id;
+    const subQ = await this.vehicleEntity
+      .createQueryBuilder('vv')
+      .innerJoin(Assumption, 'asmpt', 'asmpt.property_id = vv.id')
+      .innerJoin(
+        Assumer,
+        'asmr',
+        'asmr.id = asmpt.assumerId AND vehicle.id = vv.id',
+      )
+      .select('COUNT(vv.id)')
+      .getSql();
 
     const res = await this.vehicleEntity
       .createQueryBuilder('vehicle')
@@ -100,10 +112,12 @@ export class MyPropertyService {
         'vehicle_image',
         'vehicle_image.vehicleID = vehicle.id',
       )
-      .where('vehicle.userID =:userID', { userID: userId })
+      .andWhere('vehicle.userID =:userID', { userID: userId })
       .andWhere('vehicle.isDropped = 0')
-      .getMany();
+      .select(['vehicle', 'vehicle_image', `(${subQ}) as totalAssumption`])
+      .getRawMany();
 
+    // console.log(res);
     return {
       code: 0,
       status: 200,
@@ -193,5 +207,24 @@ export class MyPropertyService {
       .select(['transaction_date']);
 
     console.log(assumer);
+  }
+  async listAssumerOfMyProperty(
+    propertyId: number,
+  ): Promise<ResponseData<AssumerListModel>> {
+    const assumerList = await this.assumerEntity
+      .createQueryBuilder('assumer')
+      .leftJoinAndSelect(Assumption, 'asmpt', 'asmpt.assumerId = assumer.id')
+      .leftJoinAndSelect(Vehicle, 'vehicle', 'vehicle.id = asmpt.property_id')
+      .leftJoinAndSelect(User, 'user', 'user.id = assumer.userId')
+      .where('asmpt.property_id =:propertyId', { propertyId })
+      .select(['user', 'assumer', 'asmpt'])
+      .getRawMany();
+    console.log(assumerList);
+    return {
+      code: 200,
+      status: 1,
+      message: 'Assumer list',
+      data: assumerList as unknown as AssumerListModel,
+    };
   }
 }

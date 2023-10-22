@@ -34,6 +34,10 @@ import { FeedbackModule } from './controllers/feedback/feedback.module';
 import { FeedbacksService } from './service/feedbacks/feedbacks.service';
 import { UserFeedBack } from './entity/feedbacks/FeedBacks';
 import { FeedbackController } from './controllers/feedback/feedback.controller';
+import { Notifications } from './entity/notifications/Notifications';
+import { NotificationsModule } from './controllers/notifications/notifications.module';
+import { NotificationsService } from './service/notifications/notifications.service';
+import { NotificationsController } from './controllers/notifications/notifications.controller';
 
 @Module({
   imports: [
@@ -45,6 +49,7 @@ import { FeedbackController } from './controllers/feedback/feedback.controller';
     AssumedPropertyModule,
     MessagesModule,
     FeedbackModule,
+    NotificationsModule,
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public'),
     }),
@@ -66,6 +71,7 @@ import { FeedbackController } from './controllers/feedback/feedback.controller';
         ReceiverMessage,
         SenderMessage,
         UserFeedBack,
+        Notifications,
       ], // list your entity here
       synchronize: true,
     }),
@@ -75,6 +81,7 @@ import { FeedbackController } from './controllers/feedback/feedback.controller';
     PropertyAssumptionsController,
     AssumedPropertyController,
     FeedbackController,
+    NotificationsController,
   ],
   providers: [
     AppService,
@@ -84,8 +91,7 @@ import { FeedbackController } from './controllers/feedback/feedback.controller';
     PropertyAsssumptionsService,
     AssumedPropertyService,
     FeedbacksService,
+    NotificationsService,
   ],
 })
 export class AppModule {}
-
-// https://www.cartoonpornvideos.com/category/hentai

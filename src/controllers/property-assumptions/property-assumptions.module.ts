@@ -8,11 +8,20 @@ import {
   Assumer,
   Assumption,
 } from 'src/entity/property-assumption/PropertyAssumption';
+import { Notifications } from 'src/entity/notifications/Notifications';
 
 @Module({
   controllers: [PropertyAssumptionsController],
   providers: [PropertyAsssumptionsService],
-  imports: [TypeOrmModule.forFeature([User, Vehicle, Assumer, Assumption])],
+  imports: [
+    TypeOrmModule.forFeature([
+      User,
+      Vehicle,
+      Assumer,
+      Assumption,
+      Notifications,
+    ]),
+  ],
   exports: [TypeOrmModule],
 })
 export class PropertyAssumptionsModule {}
