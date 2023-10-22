@@ -12,6 +12,7 @@ import {
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import {
+  AssumerListModel,
   MyVehiclePropertyModel,
   UpdateVehicleInformationModel,
 } from 'src/models/my-property/MyProperty';
@@ -81,5 +82,11 @@ export class MyPropertyController {
   @Get('all-property-assumption/:userId')
   getAllMyAssumedProperty(@Param() param: { userId: number }) {
     return this.propertyService.getAllMyAssumedProperty(param);
+  }
+  @Get('list-assumer/:propertyId')
+  listAssumerOfMyProperty(
+    @Param('propertyId') propertyId: number,
+  ): Promise<ResponseData<AssumerListModel>> {
+    return this.propertyService.listAssumerOfMyProperty(propertyId);
   }
 }

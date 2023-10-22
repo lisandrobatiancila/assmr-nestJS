@@ -40,7 +40,7 @@ export class FeedbacksService {
       .createQueryBuilder('feedbacks')
       .getMany();
 
-    console.log(feedBackList);
+    // console.log(feedBackList);
     return {
       code: 200,
       status: 1,

@@ -6,6 +6,7 @@ import {
   ReceiverMessage,
   SenderMessage,
 } from 'src/entity/messages/Messages';
+import { Notifications } from 'src/entity/notifications/Notifications';
 import { User } from 'src/entity/signup/signup.entity';
 import {
   IChatSendMessageModel,
@@ -23,11 +24,14 @@ export class MessagesService {
     private receiverMessEntity: Repository<ReceiverMessage>,
     @InjectRepository(SenderMessage)
     private senderMessEntity: Repository<SenderMessage>,
+    @InjectRepository(Notifications)
+    private notificationEntity: Repository<Notifications>,
   ) {}
   async getIChatWith({
     activeUser,
     otherUser,
   }: IChatWithModel): Promise<ResponseData<IChatWithMessagesModel[]>> {
+    console.log(activeUser, otherUser)
     const messages = await this.messagesEntity
       .createQueryBuilder('messages')
       .innerJoin(
@@ -105,6 +109,20 @@ export class MessagesService {
         senderMessageId: sendResId,
         message,
         date: new Date(),
+      })
+      .execute();
+
+    this.notificationEntity
+      .createQueryBuilder('notifications')
+      .insert()
+      .into(Notifications)
+      .values({
+        userNotifReceiverId: receiverId,
+        userNotifSenderId: senderId,
+        notificationType: 'message',
+        notificationContent: 'someone sent a message',
+        isSeen: 'false',
+        notificationDate: new Date(),
       })
       .execute();
 

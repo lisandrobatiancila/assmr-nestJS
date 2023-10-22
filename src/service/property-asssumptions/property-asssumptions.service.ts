@@ -2,6 +2,7 @@
 import { Body, Get, Injectable, Param } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Vehicle } from 'src/entity/my-property/my-property';
+import { Notifications } from 'src/entity/notifications/Notifications';
 import {
   Assumer,
   Assumption,
@@ -23,6 +24,8 @@ export class PropertyAsssumptionsService {
     @InjectRepository(Assumer) private assumerEntity: Repository<Assumer>,
     @InjectRepository(Assumption)
     private assumptionEntity: Repository<Assumption>,
+    @InjectRepository(Notifications)
+    private notificationEntity: Repository<Notifications>,
     private dataSource: DataSource,
   ) {}
   async getAllVehiclesBackUp(): Promise<
@@ -125,7 +128,19 @@ export class PropertyAsssumptionsService {
         isActive: '1',
       })
       .execute();
-
+    this.notificationEntity
+      .createQueryBuilder('notifications')
+      .insert()
+      .into(Notifications)
+      .values({
+        userNotifReceiverId: ownerID,
+        userNotifSenderId: userID,
+        notificationType: 'assumption',
+        notificationContent: 'Someone assumed your property',
+        isSeen: 'false',
+        notificationDate: new Date(),
+      })
+      .execute();
     return {
       code: 200,
       status: 1,
