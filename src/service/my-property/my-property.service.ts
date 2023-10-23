@@ -227,4 +227,7 @@ export class MyPropertyService {
       data: assumerList as unknown as AssumerListModel,
     };
   }
+  async removeAssumer(userId: number) {
+    console.log(userId);
+  }
 }
