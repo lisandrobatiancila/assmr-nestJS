@@ -6,6 +6,7 @@ import {
   Get,
   Param,
   Post,
+  Put,
   UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common';
@@ -88,5 +89,9 @@ export class MyPropertyController {
     @Param('propertyId') propertyId: number,
   ): Promise<ResponseData<AssumerListModel>> {
     return this.propertyService.listAssumerOfMyProperty(propertyId);
+  }
+  @Put('remove-assumer/:assumerId')
+  removeAssumer(@Param('assumerId') assumerId: number) {
+    this.propertyService.removeAssumer(assumerId);
   }
 }

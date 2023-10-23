@@ -30,13 +30,13 @@ export class NotificationsService {
       .getRawMany();
 
     // console.log(notifications);
-    this.notifEntity
-      .createQueryBuilder('notifications')
-      .update(Notifications)
-      .set({
-        isSeen: 'true',
-      })
-      .execute();
+    // this.notifEntity
+    //   .createQueryBuilder('notifications')
+    //   .update(Notifications)
+    //   .set({
+    //     isSeen: 'true',
+    //   })
+    //   .execute();
 
     return {
       code: 200,
