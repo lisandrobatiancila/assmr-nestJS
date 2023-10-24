@@ -5,6 +5,7 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
   Put,
   UploadedFiles,
@@ -90,8 +91,8 @@ export class MyPropertyController {
   ): Promise<ResponseData<AssumerListModel>> {
     return this.propertyService.listAssumerOfMyProperty(propertyId);
   }
-  @Put('remove-assumer/:assumerId')
-  removeAssumer(@Param('assumerId') assumerId: number) {
-    this.propertyService.removeAssumer(assumerId);
+  @Patch('remove-assumer/:assumerId')
+  removeAssumer(@Param('assumerId') assumerId: number): Promise<ResponseData<string>> {
+    return this.propertyService.removeAssumer(assumerId);
   }
 }

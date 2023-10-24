@@ -99,7 +99,7 @@ export class MyPropertyService {
       .innerJoin(
         Assumer,
         'asmr',
-        'asmr.id = asmpt.assumerId AND vehicle.id = vv.id',
+        'asmr.id = asmpt.assumerId AND vehicle.id = vv.id AND asmpt.isActive = 1',
       )
       .select('COUNT(vv.id)')
       .getSql();
@@ -112,12 +112,13 @@ export class MyPropertyService {
         'vehicle_image',
         'vehicle_image.vehicleID = vehicle.id',
       )
-      .andWhere('vehicle.userID =:userID', { userID: userId })
+      .where('vehicle.userID =:userID', { userID: userId })
       .andWhere('vehicle.isDropped = 0')
       .select(['vehicle', 'vehicle_image', `(${subQ}) as totalAssumption`])
       .getRawMany();
+      // .getSql();
 
-    // console.log(res);
+    console.log(res);
     return {
       code: 0,
       status: 200,
@@ -217,6 +218,7 @@ export class MyPropertyService {
       .leftJoinAndSelect(Vehicle, 'vehicle', 'vehicle.id = asmpt.property_id')
       .leftJoinAndSelect(User, 'user', 'user.id = assumer.userId')
       .where('asmpt.property_id =:propertyId', { propertyId })
+      .andWhere('asmpt.isActive =:isActive', {isActive: 1})
       .select(['user', 'assumer', 'asmpt'])
       .getRawMany();
     console.log(assumerList);
@@ -227,7 +229,17 @@ export class MyPropertyService {
       data: assumerList as unknown as AssumerListModel,
     };
   }
-  async removeAssumer(userId: number) {
-    console.log(userId);
+  async removeAssumer(userId: number): Promise<ResponseData<string>> {
+    this.assumptionEntity.createQueryBuilder('assumption')
+      .update(Assumption)
+      .set({isActive: '0'})
+      .execute();
+
+      return {
+        code: 200,
+        status: 1,
+        message: 'removing assumption',
+        data: 'Assumer was removed'
+      }
   }
 }
