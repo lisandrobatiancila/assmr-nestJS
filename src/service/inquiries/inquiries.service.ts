@@ -70,7 +70,37 @@ export class InquiriesService {
       data: 'Your inquiry has been successfully send.',
     };
   }
-  getAllInquiries(userId: number) {
-    console.log(userId);
+  async getAllInquiries(
+    userId: number,
+  ): Promise<ResponseData<InquiriesModel[]>> {
+    const inquiries = await this.inquiryEntity
+      .createQueryBuilder('inquiries')
+      .where('inquiries.userReceiverId =:userReceiverId', {
+        userReceiverId: userId,
+      })
+      .select([
+        'inquiries.id as id',
+        'inquiries.userSenderId as userSenderId',
+        'inquiries.userReceiverId as ReceiverId',
+        'inquiries.propertyId as propertyId',
+        'inquiries.firstname as firstname',
+        'inquiries.lastname as lastname',
+        'inquiries.address as address',
+        'inquiries.streetAddress as streetAddress',
+        'inquiries.streetAddressLine2 as addressLine2',
+        'inquiries.stateOProvince as stateOProvince',
+        'inquiries.zipCode as zipCode',
+        'inquiries.phoneNumber as phoneNumber',
+        'inquiries.email as email',
+        'inquiries.description as description',
+      ])
+      .getRawMany();
+
+    return {
+      code: 200,
+      status: 1,
+      message: 'getting inquiries',
+      data: inquiries,
+    };
   }
 }
