@@ -11,8 +11,10 @@ export class InquiriesController {
   ): Promise<ResponseData<string>> {
     return this.inquiryService.sendInquiries(inquiry);
   }
-  @Get('get-inquiries')
-  getAllInquiries(@Param('userId') userId: number) {
+  @Get('get-inquiries/:userId')
+  getAllInquiries(
+    @Param('userId') userId: number,
+  ): Promise<ResponseData<InquiriesModel[]>> {
     return this.inquiryService.getAllInquiries(userId);
   }
 }
