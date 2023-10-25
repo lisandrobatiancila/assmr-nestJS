@@ -92,7 +92,9 @@ export class MyPropertyController {
     return this.propertyService.listAssumerOfMyProperty(propertyId);
   }
   @Patch('remove-assumer/:assumerId')
-  removeAssumer(@Param('assumerId') assumerId: number): Promise<ResponseData<string>> {
+  removeAssumer(
+    @Param('assumerId') assumerId: number,
+  ): Promise<ResponseData<string>> {
     return this.propertyService.removeAssumer(assumerId);
   }
 }

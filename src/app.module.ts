@@ -38,6 +38,9 @@ import { Notifications } from './entity/notifications/Notifications';
 import { NotificationsModule } from './controllers/notifications/notifications.module';
 import { NotificationsService } from './service/notifications/notifications.service';
 import { NotificationsController } from './controllers/notifications/notifications.controller';
+import { InquiriesModule } from './controllers/inquiries/inquiries.module';
+import { InquiriesService } from './service/inquiries/inquiries.service';
+import { Inquiries } from './entity/inquiries/Inquiries';
 
 @Module({
   imports: [
@@ -72,9 +75,11 @@ import { NotificationsController } from './controllers/notifications/notificatio
         SenderMessage,
         UserFeedBack,
         Notifications,
+        Inquiries,
       ], // list your entity here
       synchronize: true,
     }),
+    InquiriesModule,
   ],
   controllers: [
     AppController,
@@ -92,6 +97,7 @@ import { NotificationsController } from './controllers/notifications/notificatio
     AssumedPropertyService,
     FeedbacksService,
     NotificationsService,
+    InquiriesService,
   ],
 })
 export class AppModule {}
