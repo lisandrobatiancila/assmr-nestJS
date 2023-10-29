@@ -62,9 +62,12 @@ export class PropertyAsssumptionsService {
   async getAllVehicles(): Promise<ResponseData<VehicleAssumptionModel[] | []>> {
     const entity = await this.vehicleEntity
       .createQueryBuilder('vehicle')
+      .innerJoinAndSelect(User, 'user', 'user.id = vehicle.userId')
       .innerJoinAndSelect('vehicle.vehicleImages', 'vehicleImages')
       .where('vehicle.id = vehicleImages.vehicleId')
-      .getMany();
+      .select(['user', 'vehicle', 'vehicleImages'])
+      .getRawMany();
+    // console.log(entity);
     return {
       code: 200,
       status: 1,
@@ -152,6 +155,7 @@ export class PropertyAsssumptionsService {
     vehicleId: number;
   }): Promise<ResponseData<CertainVehicleModel[]>> {
     const { vehicleId } = param;
+    // console.log(param);
     const vehicle = await this.vehicleEntity
       .createQueryBuilder('vehicle')
       .innerJoin('vehicle.vehicleImages', 'vehicleImages')
@@ -168,8 +172,8 @@ export class PropertyAsssumptionsService {
         'description',
         'vehicleImages',
       ])
-      .execute();
-
+      .getRawMany();
+      // console.log(vehicle);
     return {
       code: 200,
       status: 1,

@@ -110,8 +110,18 @@ export class SigninService {
   async updateCredentials(
     params: UpdateUserInformationModel,
   ): Promise<ResponseData<string>> {
-    const { firstname, middlename, lastname, contactno, email, password } =
-      params;
+    console.log(params);
+    const {
+      firstname,
+      middlename,
+      lastname,
+      contactno,
+      municipality,
+      province,
+      barangay,
+      email,
+      password,
+    } = params;
 
     this.accountCred
       .createQueryBuilder('account')
@@ -130,6 +140,9 @@ export class SigninService {
         middlename: middlename.toLocaleLowerCase(),
         lastname: lastname.toLocaleLowerCase(),
         contactno,
+        municipality,
+        province,
+        barangay,
       })
       .where('user.email =:email', { email })
       .execute();
