@@ -44,4 +44,7 @@ export interface UpdateUserInformationModel extends UserSigninModel {
   middlename: string;
   lastname: string;
   contactno: string;
+  municipality: string;
+  province: string;
+  barangay: string;
 }

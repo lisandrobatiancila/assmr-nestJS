@@ -39,8 +39,38 @@ export interface PropertyAssumptionModel {
   monthSalary: string;
 } // used by generic assumption either Vehicle, Jewelry, HouseAndLot, Lot, House;;;; submition ni sa form sa assumption
 
-export interface VehicleAssumptionModel
-  extends VehicleForAssumptionInformationModel {} // for displaying properties, ready for assumption
+export interface VehicleAssumptionModel {
+  vehicle_id: number;
+  vehicle_userId: number;
+  vehicle_brand: string;
+  vehicle_model: string;
+  vehicle_owner: string;
+  vehicle_downpayment: string;
+  vehicle_location: string;
+  vehicle_installmentpaid: string;
+  vehicle_installmentduration: string;
+  vehicle_delinquent: string;
+  vehicle_description: string;
+  vehicle_isDropped: string;
+  user_id: number;
+  user_email: string;
+  user_firstname: string;
+  user_middlename: string;
+  user_lastname: string;
+  user_contactno: string;
+  user_gender: string;
+  user_municipality: string;
+  user_province: string;
+  user_barangay: string;
+  vehicleImages_id: number;
+  vehicleImages_vehicleId: number;
+  vehicleImages_vehicleFrontIMG: string;
+  vehicleImages_vehicleRightIMG: string;
+  vehicleImages_vehicleLeftIMG: string;
+  vehicleImages_vehicleBackIMG: string;
+  vehicleImages_vehicleCRIMG: string;
+  vehicleImages_vehicleORIMG: string;
+} // for displaying properties, ready for assumption
 
 export interface CertainVehicleModel {
   userId: number;
