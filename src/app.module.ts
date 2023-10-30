@@ -41,6 +41,9 @@ import { NotificationsController } from './controllers/notifications/notificatio
 import { InquiriesModule } from './controllers/inquiries/inquiries.module';
 import { InquiriesService } from './service/inquiries/inquiries.service';
 import { Inquiries } from './entity/inquiries/Inquiries';
+import { DashboardModule } from './controllers/dashboard/dashboard.module';
+import { DashboardService } from './service/dashboard/dashboard.service';
+import { JewelryEntity } from './entity/my-property/my-jewelry';
 
 @Module({
   imports: [
@@ -76,10 +79,12 @@ import { Inquiries } from './entity/inquiries/Inquiries';
         UserFeedBack,
         Notifications,
         Inquiries,
+        JewelryEntity,
       ], // list your entity here
       synchronize: true,
     }),
     InquiriesModule,
+    DashboardModule,
   ],
   controllers: [
     AppController,
@@ -98,6 +103,7 @@ import { Inquiries } from './entity/inquiries/Inquiries';
     FeedbacksService,
     NotificationsService,
     InquiriesService,
+    DashboardService,
   ],
 })
 export class AppModule {}
