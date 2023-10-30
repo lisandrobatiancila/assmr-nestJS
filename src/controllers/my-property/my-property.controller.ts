@@ -15,10 +15,14 @@ import { FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import {
   AssumerListModel,
+  MyJewelryPropertyModel,
   MyVehiclePropertyModel,
   UpdateVehicleInformationModel,
 } from 'src/models/my-property/MyProperty';
-import { VehicleOwnerModel } from 'src/models/user/UserModel';
+import {
+  JewelryOwnerModel,
+  VehicleOwnerModel,
+} from 'src/models/user/UserModel';
 import { MyPropertyService } from 'src/service/my-property/my-property.service';
 
 @Controller('my-property')
@@ -68,13 +72,13 @@ export class MyPropertyController {
   getCertainVehicle(@Param() param: any) {
     const { vehicleID } = param;
     return this.propertyService.getCertainVehicle(vehicleID);
-  }
+  } // for update vehicle
   @Post('update-certain-vehicle')
   updateCertainVehicleInfo(
     @Body() vehicleInfo: UpdateVehicleInformationModel,
   ): Promise<ResponseData<string>> {
     return this.propertyService.updateCertainVehicle(vehicleInfo);
-  }
+  } // for update vehicle
   @Delete('remove-certain-vehicle/:vehicleID')
   removeCertainVehicleProperty(
     @Param() param: { vehicelID: number },
@@ -96,5 +100,48 @@ export class MyPropertyController {
     @Param('assumerId') assumerId: number,
   ): Promise<ResponseData<string>> {
     return this.propertyService.removeAssumer(assumerId);
+  }
+  @Post('jewelry')
+  @UseInterceptors(
+    FilesInterceptor('images', 20, {
+      storage: diskStorage({
+        destination: 'public/images/jewelry',
+        filename: (req, file, cb) => {
+          cb(null, `${Date.now()}-${file.originalname}`);
+        },
+      }),
+    }),
+  )
+  uploadJewelry(
+    @Body() formBody: JewelryOwnerModel,
+    @UploadedFiles() images: Array<Express.Multer.File>,
+  ): Promise<ResponseData<[]>> {
+    try {
+      const pathLists: string[] = [];
+      images.map((image) => pathLists.push(image.path));
+      return this.propertyService.uploadJewelryProperty(formBody, pathLists);
+    } catch (error) {
+      const resp: ResponseData<[]> = {
+        code: 0,
+        status: 500,
+        message: 'Someting went wrong.',
+        data: [],
+      };
+
+      return new Promise((resolve, reject) => resolve(resp));
+    }
+  }
+  @Get('jewelry/:email')
+  getActiveUserJewelry(
+    @Param() param: { email: string },
+  ): Promise<ResponseData<MyJewelryPropertyModel[]>> {
+    return this.propertyService.getActiveUserJewelry(param);
+  }
+  @Get('certain-jewelry/:jewelryID')
+  getCertainJewelry(
+    @Param() param: any,
+  ): Promise<ResponseData<MyJewelryPropertyModel>> {
+    const { jewelryID } = param;
+    return this.propertyService.getCertainJewelry(jewelryID);
   }
 }

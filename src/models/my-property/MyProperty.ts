@@ -102,3 +102,21 @@ export interface AssumerListModel {
   user_province: string;
   user_barangay: string;
 }
+
+export interface MyJewelryPropertyModel {
+  jewelry_id: number;
+  jewelry_jewelry_owner: string;
+  jewelry_jewelry_name: string;
+  jewelry_jewelry_model: string;
+  jewelry_jewelry_downpayment: string;
+  jewelry_jewelry_location: string;
+  jewelry_jewelry_delinquent: string;
+  jewelry_jewelry_installmentpaid: string;
+  jewelry_jewelry_installmentduration: string;
+  jewelry_jewelry_description: string;
+  jewelry_jewelry_karat: string;
+  jewelry_jewelry_grams: string;
+  jewelry_jewelry_material: string;
+  jewelry_jewelry_image: string;
+  jewelry_userId: number;
+}

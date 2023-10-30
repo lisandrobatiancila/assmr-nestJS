@@ -8,6 +8,7 @@ import {
   Assumer,
   Assumption,
 } from 'src/entity/property-assumption/PropertyAssumption';
+import { JewelryEntity } from 'src/entity/my-property/my-jewelry';
 
 @Module({
   controllers: [MyPropertyController],
@@ -19,6 +20,7 @@ import {
       User,
       Assumer,
       Assumption,
+      JewelryEntity,
     ]),
   ],
   exports: [TypeOrmModule],

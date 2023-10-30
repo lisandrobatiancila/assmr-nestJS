@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { JewelryEntity } from 'src/entity/my-property/my-jewelry';
 import { Vehicle, VehicleImage } from 'src/entity/my-property/my-property';
 import {
   Assumer,
@@ -8,10 +9,14 @@ import {
 import { User } from 'src/entity/signup/signup.entity';
 import {
   AssumerListModel,
+  MyJewelryPropertyModel,
   MyVehiclePropertyModel,
   UpdateVehicleInformationModel,
 } from 'src/models/my-property/MyProperty';
-import { VehicleOwnerModel } from 'src/models/user/UserModel';
+import {
+  JewelryOwnerModel,
+  VehicleOwnerModel,
+} from 'src/models/user/UserModel';
 import { In, Repository } from 'typeorm';
 
 @Injectable()
@@ -24,6 +29,8 @@ export class MyPropertyService {
     @InjectRepository(Assumer) private assumerEntity: Repository<Assumer>,
     @InjectRepository(Assumption)
     private assumptionEntity: Repository<Assumption>,
+    @InjectRepository(JewelryEntity)
+    private jewelryEntity: Repository<JewelryEntity>,
   ) {}
   async uploadVehicleProperty(
     uploaderInfo: VehicleOwnerModel,
@@ -116,9 +123,9 @@ export class MyPropertyService {
       .andWhere('vehicle.isDropped = 0')
       .select(['vehicle', 'vehicle_image', `(${subQ}) as totalAssumption`])
       .getRawMany();
-      // .getSql();
+    // .getSql();
 
-    console.log(res);
+    // console.log(res);
     return {
       code: 0,
       status: 200,
@@ -190,7 +197,7 @@ export class MyPropertyService {
       })
       .where('vehicle.id =:vehicleID', { vehicleID })
       .execute();
-    console.log(vehicleID);
+    // console.log(vehicleID);
 
     return {
       code: 200,
@@ -218,7 +225,7 @@ export class MyPropertyService {
       .leftJoinAndSelect(Vehicle, 'vehicle', 'vehicle.id = asmpt.property_id')
       .leftJoinAndSelect(User, 'user', 'user.id = assumer.userId')
       .where('asmpt.property_id =:propertyId', { propertyId })
-      .andWhere('asmpt.isActive =:isActive', {isActive: 1})
+      .andWhere('asmpt.isActive =:isActive', { isActive: 1 })
       .select(['user', 'assumer', 'asmpt'])
       .getRawMany();
     console.log(assumerList);
@@ -230,16 +237,128 @@ export class MyPropertyService {
     };
   }
   async removeAssumer(userId: number): Promise<ResponseData<string>> {
-    this.assumptionEntity.createQueryBuilder('assumption')
+    this.assumptionEntity
+      .createQueryBuilder('assumption')
       .update(Assumption)
-      .set({isActive: '0'})
+      .set({ isActive: '0' })
+      .where('assumption.userId =:userId', { userId })
       .execute();
 
-      return {
-        code: 200,
-        status: 1,
-        message: 'removing assumption',
-        data: 'Assumer was removed'
-      }
+    return {
+      code: 200,
+      status: 1,
+      message: 'removing assumption',
+      data: 'Assumer was removed',
+    };
+  }
+  async uploadJewelryProperty(
+    uploaderInfo: JewelryOwnerModel,
+    pathLists: string[],
+  ) {
+    const {
+      email,
+      jewelryName,
+      jewelryModel,
+      owner,
+      downpayment,
+      location,
+      installmentpaid,
+      installmentduration,
+      delinquent,
+      description,
+      karat,
+      grams,
+      material,
+    } = uploaderInfo;
+
+    const user = await this.userEntity
+      .createQueryBuilder('user')
+      .select(['id'])
+      .where('email =:userEmail', { userEmail: email })
+      .execute();
+
+    this.jewelryEntity
+      .createQueryBuilder('jewelries')
+      .insert()
+      .into(JewelryEntity)
+      .values({
+        user: () => (user.id = user[0].id),
+        jewelry_owner: owner,
+        jewelry_name: jewelryName,
+        jewelry_model: jewelryModel,
+        jewelry_downpayment: downpayment.toString(),
+        jewelry_location: location,
+        jewelry_delinquent: delinquent,
+        jewelry_installmentpaid: installmentpaid.toString(),
+        jewelry_installmentduration: installmentduration,
+        jewelry_description: description,
+        jewelry_karat: karat,
+        jewelry_grams: grams,
+        jewelry_material: material,
+        jewelry_image: JSON.stringify(pathLists),
+      })
+      .execute();
+
+    const response: ResponseData<[]> = {
+      code: 1,
+      status: 200,
+      message: 'Jewelry Property was uploaded.',
+      data: [],
+    };
+
+    return response;
+  }
+  async getActiveUserJewelry(param: {
+    email: string;
+  }): Promise<ResponseData<MyJewelryPropertyModel[]>> {
+    const { email } = param;
+
+    const subQ = await this.jewelryEntity
+      .createQueryBuilder('jj')
+      .innerJoin(Assumption, 'asmpt', 'asmpt.property_id = jj.id')
+      .innerJoin(
+        Assumer,
+        'asmr',
+        'asmr.id = asmpt.assumerId AND asmpt.isActive = 1',
+      )
+      .select('COUNT(jj.id)')
+      .getSql();
+
+    const user = await this.userEntity
+      .createQueryBuilder('user')
+      .select(['id'])
+      .where('email =:email', { email })
+      .getRawOne();
+
+    const jewelries = await this.jewelryEntity
+      .createQueryBuilder('jewelry')
+      .select(['jewelry', `(${subQ}) as totalAssumption`])
+      .where('userId =:userId', { userId: user.id })
+      .execute();
+    // .getQuery();
+
+    // console.log(jewelries);
+    return {
+      code: 200,
+      status: 1,
+      message: 'Jewelry property was uploaded.',
+      data: jewelries,
+    };
+  }
+  async getCertainJewelry(
+    jewelryId: number,
+  ): Promise<ResponseData<MyJewelryPropertyModel>> {
+    const jewelry = await this.jewelryEntity
+      .createQueryBuilder('jewelry')
+      .select(['jewelry'])
+      .where('id =:id', { id: jewelryId })
+      .getRawOne();
+    // console.log(jewelry);
+    return {
+      code: 200,
+      status: 1,
+      message: 'Certain jewelry.',
+      data: jewelry,
+    };
   }
 }

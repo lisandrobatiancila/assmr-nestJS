@@ -48,3 +48,19 @@ export interface UpdateUserInformationModel extends UserSigninModel {
   province: string;
   barangay: string;
 }
+
+export interface JewelryOwnerModel {
+  email: string;
+  jewelryName: string;
+  jewelryModel: string;
+  owner: string;
+  downpayment: number;
+  location: string;
+  installmentpaid: number;
+  installmentduration: string;
+  delinquent: string;
+  description: string;
+  karat: string;
+  grams: string;
+  material: string;
+}
