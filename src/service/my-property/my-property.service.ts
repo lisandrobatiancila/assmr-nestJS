@@ -3,6 +3,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { JewelryEntity } from 'src/entity/my-property/my-jewelry';
 import { Vehicle, VehicleImage } from 'src/entity/my-property/my-property';
 import {
+  House,
+  HouseAndLot,
+  Lot,
+  Realeststate,
+} from 'src/entity/my-property/my-realestate';
+import {
   Assumer,
   Assumption,
 } from 'src/entity/property-assumption/PropertyAssumption';
@@ -11,10 +17,12 @@ import {
   AssumerListModel,
   MyJewelryPropertyModel,
   MyVehiclePropertyModel,
+  UpdateJewelryInformationModel,
   UpdateVehicleInformationModel,
 } from 'src/models/my-property/MyProperty';
 import {
   JewelryOwnerModel,
+  RealestateOwnerModel,
   VehicleOwnerModel,
 } from 'src/models/user/UserModel';
 import { In, Repository } from 'typeorm';
@@ -31,6 +39,11 @@ export class MyPropertyService {
     private assumptionEntity: Repository<Assumption>,
     @InjectRepository(JewelryEntity)
     private jewelryEntity: Repository<JewelryEntity>,
+    @InjectRepository(Realeststate)
+    private realestateEntity: Repository<Realeststate>,
+    @InjectRepository(HouseAndLot) private halEntity: Repository<HouseAndLot>,
+    @InjectRepository(House) private houseEntity: Repository<House>,
+    @InjectRepository(Lot) private lotEntity: Repository<Lot>,
   ) {}
   async uploadVehicleProperty(
     uploaderInfo: VehicleOwnerModel,
@@ -207,14 +220,14 @@ export class MyPropertyService {
     };
   }
   async getAllMyAssumedProperty(param: { userId: number }) {
-    console.log(param);
+    // console.log(param);
 
     const assumer = await this.assumerEntity
       .createQueryBuilder('assumer')
       .where('userId =:userId', { userId: 1 })
       .select(['transaction_date']);
 
-    console.log(assumer);
+    // console.log(assumer);
   }
   async listAssumerOfMyProperty(
     propertyId: number,
@@ -228,7 +241,7 @@ export class MyPropertyService {
       .andWhere('asmpt.isActive =:isActive', { isActive: 1 })
       .select(['user', 'assumer', 'asmpt'])
       .getRawMany();
-    console.log(assumerList);
+    // console.log(assumerList);
     return {
       code: 200,
       status: 1,
@@ -296,6 +309,7 @@ export class MyPropertyService {
         jewelry_grams: grams,
         jewelry_material: material,
         jewelry_image: JSON.stringify(pathLists),
+        isDropped: '0',
       })
       .execute();
 
@@ -334,6 +348,7 @@ export class MyPropertyService {
       .createQueryBuilder('jewelry')
       .select(['jewelry', `(${subQ}) as totalAssumption`])
       .where('userId =:userId', { userId: user.id })
+      .andWhere('jewelry.isDropped =0')
       .execute();
     // .getQuery();
 
@@ -360,5 +375,164 @@ export class MyPropertyService {
       message: 'Certain jewelry.',
       data: jewelry,
     };
+  }
+  async updateCertainJewelry(
+    jewelryInfo: UpdateJewelryInformationModel,
+  ): Promise<ResponseData<string>> {
+    const {
+      id,
+      owner,
+      jewelryName,
+      jewelryModel,
+      downpayment,
+      location,
+      installmentpaid,
+      installmentduration,
+      delinquent,
+      description,
+      karat,
+      grams,
+      material,
+    } = jewelryInfo;
+    this.jewelryEntity
+      .createQueryBuilder('jewelry')
+      .update(JewelryEntity)
+      .set({
+        jewelry_owner: owner,
+        jewelry_name: jewelryName,
+        jewelry_model: jewelryModel,
+        jewelry_location: location,
+        jewelry_downpayment: downpayment,
+        jewelry_installmentpaid: installmentpaid,
+        jewelry_installmentduration: installmentduration,
+        jewelry_delinquent: delinquent,
+        jewelry_description: description,
+        jewelry_karat: karat,
+        jewelry_grams: grams,
+        jewelry_material: material,
+      })
+      .where('id =:jewelryId', { jewelryId: id })
+      .execute();
+
+    return {
+      code: 200,
+      status: 1,
+      message: `Certain jewelry update.`,
+      data: `'very nice' Jewelry was updated.`,
+    };
+  }
+  async removeCertainJewelry(param: {
+    jewelryID: number;
+  }): Promise<ResponseData<string>> {
+    const { jewelryID } = param;
+
+    this.jewelryEntity
+      .createQueryBuilder('jewelry')
+      .update(JewelryEntity)
+      .set({
+        isDropped: '1',
+      })
+      .where('id =:jewelryID', { jewelryID })
+      .execute();
+
+    return {
+      code: 200,
+      status: 1,
+      message: 'Jewelry was removed.',
+      data: 'Certain jewelry was removed.',
+    };
+  }
+  async getActiveUserRealestate(param: {
+    email: string;
+    realestateType: string;
+  }) {
+    console.log(param);
+
+    return {};
+  }
+  async uploadRealestateProperty(
+    uploaderInfo: RealestateOwnerModel,
+    pathLists: string[],
+  ) {
+    const {
+      email,
+      realestateType,
+      owner,
+      developer,
+      downpayment,
+      location,
+      installmentpaid,
+      installmentduration,
+      delinquent,
+      description,
+    } = uploaderInfo;
+    console.log(uploaderInfo);
+    // console.log(pathLists);
+
+    const user = await this.userEntity
+      .createQueryBuilder('user')
+      .select(['id'])
+      .where('email =:email', { email })
+      .getRawOne();
+
+    const { id } = user;
+
+    const realestate = await this.realestateEntity
+      .createQueryBuilder('realestate')
+      .insert()
+      .into(Realeststate)
+      .values({
+        owner: owner,
+        realestateType: realestateType,
+        location: location,
+        downpayment: downpayment.toString(),
+        installmentpaid: installmentpaid.toString(),
+        installmentduration,
+        delinquent,
+        description,
+        userId: () => (user.userId = id),
+      })
+      .execute();
+    const { insertId } = realestate.raw;
+
+    switch (realestateType) {
+      case 'house and lot':
+        this.halEntity
+          .createQueryBuilder('hal')
+          .insert()
+          .into(HouseAndLot)
+          .values({
+            developer,
+            realestateId: insertId,
+            hal_front_image: JSON.stringify(pathLists),
+          })
+          .execute();
+        break;
+      case 'house':
+        this.houseEntity
+          .createQueryBuilder('house')
+          .insert()
+          .into(House)
+          .values({
+            developer,
+            realestateId: insertId,
+            house_front_image: JSON.stringify(pathLists),
+          })
+          .execute();
+        break;
+      case 'lot':
+        this.lotEntity
+          .createQueryBuilder('lot')
+          .insert()
+          .into(House)
+          .values({
+            realestateId: insertId,
+            house_front_image: JSON.stringify(pathLists),
+          })
+          .execute();
+        break;
+      default:
+        console.log('No realestateType');
+    }
   }
 }

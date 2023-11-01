@@ -44,6 +44,12 @@ import { Inquiries } from './entity/inquiries/Inquiries';
 import { DashboardModule } from './controllers/dashboard/dashboard.module';
 import { DashboardService } from './service/dashboard/dashboard.service';
 import { JewelryEntity } from './entity/my-property/my-jewelry';
+import {
+  House,
+  HouseAndLot,
+  Lot,
+  Realeststate,
+} from './entity/my-property/my-realestate';
 
 @Module({
   imports: [
@@ -80,6 +86,10 @@ import { JewelryEntity } from './entity/my-property/my-jewelry';
         Notifications,
         Inquiries,
         JewelryEntity,
+        Realeststate,
+        HouseAndLot,
+        House,
+        Lot,
       ], // list your entity here
       synchronize: true,
     }),

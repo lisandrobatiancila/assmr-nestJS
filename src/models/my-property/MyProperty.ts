@@ -119,4 +119,24 @@ export interface MyJewelryPropertyModel {
   jewelry_jewelry_material: string;
   jewelry_jewelry_image: string;
   jewelry_userId: number;
+} // used this when fetching jewelry property
+
+export interface UpdateJewelryInformationModel {
+  id: number; // jewelryID
+  jewelryName: string;
+  jewelryModel: string;
+  owner: string;
+  downpayment: string;
+  location: string;
+  installmentpaid: string;
+  installmentduration: string;
+  delinquent: string;
+  description: string;
+  karat: string;
+  grams: string;
+  material: string;
+}
+
+export interface UploadJewelryInformationModel {
+  
 }

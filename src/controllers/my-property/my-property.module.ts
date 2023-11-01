@@ -9,6 +9,12 @@ import {
   Assumption,
 } from 'src/entity/property-assumption/PropertyAssumption';
 import { JewelryEntity } from 'src/entity/my-property/my-jewelry';
+import {
+  House,
+  HouseAndLot,
+  Lot,
+  Realeststate,
+} from 'src/entity/my-property/my-realestate';
 
 @Module({
   controllers: [MyPropertyController],
@@ -21,6 +27,10 @@ import { JewelryEntity } from 'src/entity/my-property/my-jewelry';
       Assumer,
       Assumption,
       JewelryEntity,
+      Realeststate,
+      HouseAndLot,
+      House,
+      Lot,
     ]),
   ],
   exports: [TypeOrmModule],
