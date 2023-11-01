@@ -87,7 +87,7 @@ export class SigninService {
         };
       }
     } catch (err) {
-      console.log(err);
+      // console.log(err);
 
       return new Promise((resolve, reject) => {
         resolve({
@@ -110,7 +110,7 @@ export class SigninService {
   async updateCredentials(
     params: UpdateUserInformationModel,
   ): Promise<ResponseData<string>> {
-    console.log(params);
+    // console.log(params);
     const {
       firstname,
       middlename,

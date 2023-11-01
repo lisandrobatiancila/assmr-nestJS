@@ -64,3 +64,16 @@ export interface JewelryOwnerModel {
   grams: string;
   material: string;
 }
+
+export interface RealestateOwnerModel {
+  email: string;
+  realestateType: string;
+  owner: string;
+  developer: string;
+  downpayment: number;
+  location: string;
+  installmentpaid: number;
+  installmentduration: string;
+  delinquent: string;
+  description: string;
+}

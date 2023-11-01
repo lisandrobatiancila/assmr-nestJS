@@ -17,10 +17,12 @@ import {
   AssumerListModel,
   MyJewelryPropertyModel,
   MyVehiclePropertyModel,
+  UpdateJewelryInformationModel,
   UpdateVehicleInformationModel,
 } from 'src/models/my-property/MyProperty';
 import {
   JewelryOwnerModel,
+  RealestateOwnerModel,
   VehicleOwnerModel,
 } from 'src/models/user/UserModel';
 import { MyPropertyService } from 'src/service/my-property/my-property.service';
@@ -143,5 +145,55 @@ export class MyPropertyController {
   ): Promise<ResponseData<MyJewelryPropertyModel>> {
     const { jewelryID } = param;
     return this.propertyService.getCertainJewelry(jewelryID);
+  }
+  @Post('update-certain-jewelry')
+  updateCertainJewelryInfo(
+    @Body() jewelryInfo: UpdateJewelryInformationModel,
+  ): Promise<ResponseData<string>> {
+    return this.propertyService.updateCertainJewelry(jewelryInfo);
+  } // for update jewelry
+  @Delete('remove-certain-jewelry/:jewelryID')
+  removeCertainJewelryProperty(
+    @Param() param: { jewelryID: number },
+  ): Promise<ResponseData<string>> {
+    return this.propertyService.removeCertainJewelry(param);
+  } // for removing jewelry
+  @Get('jewelry/:email')
+  async getActiveUserRealestate(
+    @Param() param: { email: string; realestateType: string },
+  ) {
+    this.propertyService.getActiveUserRealestate(param);
+  }
+  @Post('realestate')
+  @UseInterceptors(
+    FilesInterceptor('images', 20, {
+      storage: diskStorage({
+        destination: 'public/images/realestate',
+        filename: (req, file, cb) => {
+          cb(null, `${Date.now()}-${file.originalname}`);
+        },
+      }),
+    }),
+  )
+  uploadRealestate(
+    @Body() formBody: RealestateOwnerModel,
+    @UploadedFiles() images: Array<Express.Multer.File>,
+  ): Promise<ResponseData<[]>> {
+    try {
+      const pathLists: string[] = [];
+
+      images.map((image) => pathLists.push(image.path));
+      this.propertyService.uploadRealestateProperty(formBody, pathLists);
+    } catch (error) {
+      console.log(error);
+      const resp: ResponseData<[]> = {
+        code: 0,
+        status: 500,
+        message: 'Someting went wrong.',
+        data: [],
+      };
+
+      return new Promise((resolve, reject) => resolve(resp));
+    }
   }
 }

@@ -32,6 +32,10 @@ export class JewelryEntity {
   jewelry_material: string;
   @Column()
   jewelry_image: string;
+  @Column({
+    length: 5,
+  })
+  isDropped: string;
 
   @ManyToOne((type) => User, (user) => user.jewelries)
   user: User;

@@ -31,7 +31,7 @@ export class MessagesService {
     activeUser,
     otherUser,
   }: IChatWithModel): Promise<ResponseData<IChatWithMessagesModel[]>> {
-    console.log(activeUser, otherUser)
+    // console.log(activeUser, otherUser)
     const messages = await this.messagesEntity
       .createQueryBuilder('messages')
       .innerJoin(
@@ -60,7 +60,7 @@ export class MessagesService {
       .groupBy('messages.senderMessageId, messages.receiverMessageId')
       .select(['messages', 'user', 'receiverMess', 'senderMess'])
       .getRawMany();
-    console.log(messages);
+    // console.log(messages);
 
     return {
       code: 200,

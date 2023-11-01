@@ -16,7 +16,7 @@ export class DashboardService {
       .createQueryBuilder('vehicle')
       .getCount();
 
-    console.log(totalPostedVehicle);
+    // console.log(totalPostedVehicle);
 
     return {
       code: 200,
