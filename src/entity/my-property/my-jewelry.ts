@@ -7,6 +7,8 @@ export class JewelryEntity {
   @PrimaryGeneratedColumn()
   id: number;
   @Column()
+  propertyId: number;
+  @Column()
   jewelry_owner: string;
   @Column()
   jewelry_name: string;

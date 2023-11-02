@@ -9,6 +9,8 @@ import {
   Assumption,
 } from 'src/entity/property-assumption/PropertyAssumption';
 import { Notifications } from 'src/entity/notifications/Notifications';
+import { House, HouseAndLot, Lot, Realeststate } from 'src/entity/my-property/my-realestate';
+import { JewelryEntity } from 'src/entity/my-property/my-jewelry';
 
 @Module({
   controllers: [PropertyAssumptionsController],
@@ -20,6 +22,11 @@ import { Notifications } from 'src/entity/notifications/Notifications';
       Assumer,
       Assumption,
       Notifications,
+      Realeststate,
+      HouseAndLot,
+      House,
+      Lot,
+      JewelryEntity,
     ]),
   ],
   exports: [TypeOrmModule],

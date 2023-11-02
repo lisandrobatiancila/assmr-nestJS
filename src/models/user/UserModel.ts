@@ -64,6 +64,11 @@ export interface JewelryOwnerModel {
   grams: string;
   material: string;
 }
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
 
 export interface RealestateOwnerModel {
   email: string;
@@ -76,4 +81,9 @@ export interface RealestateOwnerModel {
   installmentduration: string;
   delinquent: string;
   description: string;
+<<<<<<< Updated upstream
 }
+=======
+}
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes

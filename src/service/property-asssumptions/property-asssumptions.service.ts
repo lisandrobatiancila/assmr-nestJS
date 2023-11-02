@@ -1,7 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Body, Get, Injectable, Param } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { JewelryEntity } from 'src/entity/my-property/my-jewelry';
 import { Vehicle } from 'src/entity/my-property/my-property';
+import {
+  House,
+  HouseAndLot,
+  Lot,
+  Realeststate,
+} from 'src/entity/my-property/my-realestate';
+import { Property } from 'src/entity/my-property/property';
 import { Notifications } from 'src/entity/notifications/Notifications';
 import {
   Assumer,
@@ -9,12 +17,17 @@ import {
 } from 'src/entity/property-assumption/PropertyAssumption';
 import { User } from 'src/entity/signup/signup.entity';
 import {
+  MyCertainJewelryModel,
+  MyJewelryPropertyModel,
+  MyRealestatePropertyModel,
+} from 'src/models/my-property/MyProperty';
+import {
   CertainVehicleModel,
   PropertyAssumptionModel,
   VehicleAssumptionModel,
   VehicleForAssumptionInformationModel,
 } from 'src/models/property-assumptions/PropertyAssumptions';
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, In, Repository } from 'typeorm';
 
 @Injectable()
 export class PropertyAsssumptionsService {
@@ -26,6 +39,13 @@ export class PropertyAsssumptionsService {
     private assumptionEntity: Repository<Assumption>,
     @InjectRepository(Notifications)
     private notificationEntity: Repository<Notifications>,
+    @InjectRepository(Realeststate)
+    private realestateEntity: Repository<Realeststate>,
+    @InjectRepository(HouseAndLot) private halEntity: Repository<HouseAndLot>,
+    @InjectRepository(House) private houseEntity: Repository<House>,
+    @InjectRepository(Lot) private lotEntity: Repository<Lot>,
+    @InjectRepository(JewelryEntity)
+    private jewelryEntity: Repository<JewelryEntity>,
     private dataSource: DataSource,
   ) {}
   async getAllVehiclesBackUp(): Promise<
@@ -59,14 +79,33 @@ export class PropertyAsssumptionsService {
       data: [],
     };
   }
-  async getAllVehicles(): Promise<ResponseData<VehicleAssumptionModel[] | []>> {
+  async getAllVehicles(
+    payloads: any,
+  ): Promise<ResponseData<VehicleAssumptionModel[] | []>> {
+    let concatFilter: string = '';
+    for (let i = 0; i < Object.keys(payloads).length; i++) {
+      if (i === 0) {
+        concatFilter = 'AND ';
+      }
+      const keys: string = `vehicle.${Object.keys(payloads)[i]}`;
+      const value: string = `${payloads[Object.keys(payloads)[i]]}`;
+      if (value.length > 0) {
+        concatFilter += `${keys} LIKE '%${value}%' OR `;
+      }
+    }
+    concatFilter = concatFilter.substring(0, concatFilter.length - 4);
+
     const entity = await this.vehicleEntity
       .createQueryBuilder('vehicle')
       .innerJoinAndSelect(User, 'user', 'user.id = vehicle.userId')
       .innerJoinAndSelect('vehicle.vehicleImages', 'vehicleImages')
-      .where('vehicle.id = vehicleImages.vehicleId')
-      .select(['user', 'vehicle', 'vehicleImages'])
+      .innerJoinAndSelect(Property, 'property', 'property.userId = user.id')
+      .where(`vehicle.id = vehicleImages.vehicleId ${concatFilter}`)
+      .andWhere('property.id = vehicle.propertyId')
+      .andWhere('vehicle.isDropped = 0')
+      .select(['user', 'vehicle', 'vehicleImages', 'property'])
       .getRawMany();
+    // .getSql();
     // console.log(entity);
     return {
       code: 200,
@@ -77,7 +116,7 @@ export class PropertyAsssumptionsService {
   }
   // for assumptions purposes
   async assumeVehicleProperty(
-    @Body() assumptionForm: PropertyAssumptionModel,
+    @Body() assumptionForm: any,
   ): Promise<ResponseData<string>> {
     const {
       userID,
@@ -95,7 +134,7 @@ export class PropertyAsssumptionsService {
     const checkIfAssumedAlready = await this.assumptionEntity
       .createQueryBuilder()
       .where('userId =:userID', { userID })
-      .andWhere('property_id =:propertyID', { propertyID })
+      .andWhere('propertyId =:propertyID', { propertyID })
       .getCount();
 
     if (checkIfAssumedAlready > 0) {
@@ -124,7 +163,7 @@ export class PropertyAsssumptionsService {
       .into(Assumption)
       .values({
         userId: userID,
-        property_id: propertyID,
+        propertyId: propertyID,
         assumerId: assumerID,
         propowner_id: ownerID,
         transaction_date: new Date(),
@@ -152,14 +191,14 @@ export class PropertyAsssumptionsService {
     };
   } // this assume a vehicle property
   async getCertainVehicle(param: {
-    vehicleId: number;
+    propertyId: number;
   }): Promise<ResponseData<CertainVehicleModel[]>> {
-    const { vehicleId } = param;
+    const { propertyId } = param;
     // console.log(param);
     const vehicle = await this.vehicleEntity
       .createQueryBuilder('vehicle')
       .innerJoin('vehicle.vehicleImages', 'vehicleImages')
-      .where('vehicle.id = :vehicleId', { vehicleId })
+      .where('vehicle.propertyId = :propertyId', { propertyId })
       .select([
         'userId',
         'brand',
@@ -173,12 +212,150 @@ export class PropertyAsssumptionsService {
         'vehicleImages',
       ])
       .getRawMany();
-      // console.log(vehicle);
+    // console.log(vehicle);
     return {
       code: 200,
       status: 1,
       message: 'Get certain vehicle',
       data: vehicle,
+    };
+  }
+  async getAllRealestates(
+    payloads: any,
+  ): Promise<ResponseData<MyRealestatePropertyModel[]>> {
+    const { realestateType, developer, owner } = payloads;
+    const tempPayload = { developer, owner };
+    let tableName = null;
+
+    tableName =
+      realestateType === 'house and lot'
+        ? HouseAndLot
+        : realestateType === 'house'
+        ? House
+        : Lot;
+    const astableName =
+      realestateType === 'house and lot'
+        ? 'hal'
+        : realestateType === 'house'
+        ? 'house'
+        : 'lot';
+    let concatFilter = '';
+    for (let i = 0; i < Object.keys(tempPayload).length; i++) {
+      if (i === 0) {
+        concatFilter = '';
+      }
+      if (astableName !== 'lot') {
+        const key = `realestate.owner LIKE '%${
+          owner ?? ''
+        }%' AND ${astableName}.developer LIKE '%${developer ?? ''}%'`;
+        concatFilter = key;
+      }
+    }
+    const realestate = await this.realestateEntity
+      .createQueryBuilder('realestate')
+      .innerJoinAndSelect(User, 'user', 'user.id = realestate.userId')
+      .innerJoinAndSelect(
+        tableName,
+        astableName,
+        `${astableName}.realestateId = realestate.id`,
+      )
+      .where(concatFilter)
+      .getRawMany();
+    // .getSql();
+
+    // console.log(realestate);
+    // console.log(payloads);
+    return {
+      code: 200,
+      status: 1,
+      message: 'Realestate proeprty.',
+      data: realestate,
+    };
+  }
+  async getCertainRealestate(param: {
+    propertyId: number;
+    realestateType: string;
+  }): Promise<ResponseData<MyRealestatePropertyModel>> {
+    // console.log(param);
+    const { propertyId, realestateType } = param;
+    const tableName =
+      realestateType === 'house and lot'
+        ? HouseAndLot
+        : realestateType === 'house'
+        ? House
+        : Lot;
+    const astableName =
+      realestateType === 'house and lot'
+        ? 'hal'
+        : realestateType === 'house'
+        ? 'house'
+        : 'lot';
+
+    const realestate = await this.realestateEntity
+      .createQueryBuilder('realestate')
+      .innerJoinAndSelect(
+        tableName,
+        astableName,
+        `${astableName}.realestateId = realestate.id`,
+      )
+      .innerJoinAndSelect(User, 'user', 'user.id = realestate.userId')
+      .where('realestate.isDropped = 0')
+      .andWhere('realestate.propertyId =:propertyId', {
+        propertyId: propertyId,
+      })
+      .getRawOne();
+
+    console.log(realestate);
+
+    return {
+      code: 200,
+      status: 1,
+      message: 'View certain realestate',
+      data: realestate,
+    };
+  }
+  async getAllJewelries(
+    payloads: any,
+  ): Promise<ResponseData<MyJewelryPropertyModel[]>> {
+    let concatFilter: string = '';
+
+    for (let i = 0; i < Object.keys(payloads).length; i++) {
+      if (i !== 0) {
+        concatFilter += `jewelry.jewelry_${Object.keys(payloads)[i]} LIKE '%${
+          payloads[Object.keys(payloads)[i]]
+        }%' AND `;
+      }
+    }
+
+    concatFilter = concatFilter.substring(0, concatFilter.length - 4);
+    const jewelries = await this.jewelryEntity
+      .createQueryBuilder('jewelry')
+      .innerJoinAndSelect(User, 'user', 'user.id = jewelry.userId')
+      .where(`${concatFilter}`)
+      .getRawMany();
+
+    return {
+      code: 200,
+      status: 1,
+      message: 'Jewelry properties',
+      data: jewelries,
+    };
+  }
+  async getCertainJewelry(
+    jewelryID: number,
+  ): Promise<ResponseData<MyCertainJewelryModel>> {
+    const jewelry = await this.jewelryEntity
+      .createQueryBuilder('jewelry')
+      .innerJoinAndSelect(User, 'user', 'user.id = jewelry.userId')
+      .where('propertyId =:propertyId', { propertyId: jewelryID })
+      .andWhere('isDropped = 0')
+      .getRawOne();
+    console.log(jewelry);
+    return {
+      code: 200,
+      status: 1,
+      message: 'Certain jewelry',
+      data: jewelry,
     };
   }
 }

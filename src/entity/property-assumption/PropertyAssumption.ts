@@ -32,7 +32,7 @@ export class Assumption {
   @Column()
   userId: number;
   @Column()
-  property_id: number;
+  propertyId: number;
   @Column()
   assumerId: number;
   @Column()
