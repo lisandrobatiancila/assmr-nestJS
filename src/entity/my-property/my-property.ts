@@ -14,6 +14,8 @@ export class Vehicle {
   @PrimaryGeneratedColumn()
   id: number;
   @Column()
+  propertyId: number;
+  @Column()
   userId: number;
   @Column()
   brand: string;

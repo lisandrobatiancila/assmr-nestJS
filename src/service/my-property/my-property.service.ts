@@ -3,12 +3,23 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { JewelryEntity } from 'src/entity/my-property/my-jewelry';
 import { Vehicle, VehicleImage } from 'src/entity/my-property/my-property';
 import {
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
   House,
   HouseAndLot,
   Lot,
   Realeststate,
 } from 'src/entity/my-property/my-realestate';
+<<<<<<< Updated upstream
 import {
+=======
+import { Property } from 'src/entity/my-property/property';
+import {
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
   Assumer,
   Assumption,
 } from 'src/entity/property-assumption/PropertyAssumption';
@@ -16,8 +27,17 @@ import { User } from 'src/entity/signup/signup.entity';
 import {
   AssumerListModel,
   MyJewelryPropertyModel,
+  MyRealestatePropertyModel,
   MyVehiclePropertyModel,
+<<<<<<< Updated upstream
   UpdateJewelryInformationModel,
+=======
+<<<<<<< Updated upstream
+=======
+  UpdateJewelryInformationModel,
+  UpdateRealestateInformationModel,
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
   UpdateVehicleInformationModel,
 } from 'src/models/my-property/MyProperty';
 import {
@@ -39,11 +59,21 @@ export class MyPropertyService {
     private assumptionEntity: Repository<Assumption>,
     @InjectRepository(JewelryEntity)
     private jewelryEntity: Repository<JewelryEntity>,
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
     @InjectRepository(Realeststate)
     private realestateEntity: Repository<Realeststate>,
     @InjectRepository(HouseAndLot) private halEntity: Repository<HouseAndLot>,
     @InjectRepository(House) private houseEntity: Repository<House>,
     @InjectRepository(Lot) private lotEntity: Repository<Lot>,
+<<<<<<< Updated upstream
+=======
+    @InjectRepository(Property) private propertyEntity: Repository<Property>,
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
   ) {}
   async uploadVehicleProperty(
     uploaderInfo: VehicleOwnerModel,
@@ -70,7 +100,20 @@ export class MyPropertyService {
       delinquent: uploaderInfo.delinquent,
       description: uploaderInfo.description,
       isDropped: '0',
+      propertyId: 0,
     };
+
+    const property = await this.propertyEntity
+      .createQueryBuilder('property')
+      .insert()
+      .into(Property)
+      .values({
+        userId: () => activeUser.id.toString(),
+        property_type: 'vehicle',
+      })
+      .execute();
+
+    uploadInfo.propertyId = property.raw.insertId;
 
     const vehicle = await this.vehicleEntity
       .createQueryBuilder()
@@ -115,7 +158,7 @@ export class MyPropertyService {
     const userId = activeUser.id;
     const subQ = await this.vehicleEntity
       .createQueryBuilder('vv')
-      .innerJoin(Assumption, 'asmpt', 'asmpt.property_id = vv.id')
+      .innerJoin(Assumption, 'asmpt', 'asmpt.propertyId = vv.propertyId')
       .innerJoin(
         Assumer,
         'asmr',
@@ -229,6 +272,7 @@ export class MyPropertyService {
 
     // console.log(assumer);
   }
+<<<<<<< Updated upstream
   async listAssumerOfMyProperty(
     propertyId: number,
   ): Promise<ResponseData<AssumerListModel>> {
@@ -241,7 +285,83 @@ export class MyPropertyService {
       .andWhere('asmpt.isActive =:isActive', { isActive: 1 })
       .select(['user', 'assumer', 'asmpt'])
       .getRawMany();
+<<<<<<< Updated upstream
     // console.log(assumerList);
+=======
+=======
+  async listAssumerOfMyProperty(param: {
+    propertyId: number;
+    propertyType: string;
+  }): Promise<ResponseData<AssumerListModel>> {
+    const { propertyId, propertyType } = param;
+    let assumerList = null;
+
+    switch (propertyType) {
+      case 'vehicle':
+        assumerList = await this.assumerEntity
+          .createQueryBuilder('assumer')
+          .leftJoinAndSelect(
+            Assumption,
+            'asmpt',
+            'asmpt.assumerId = assumer.id',
+          )
+          .leftJoinAndSelect(
+            Vehicle,
+            'vehicle',
+            'vehicle.propertyId = asmpt.propertyId',
+          )
+          .leftJoinAndSelect(User, 'user', 'user.id = assumer.userId')
+          .where('asmpt.propertyId =:propertyId', { propertyId })
+          .andWhere('asmpt.isActive =:isActive', { isActive: 1 })
+          .select(['user', 'assumer', 'asmpt'])
+          .getRawMany();
+        break;
+      case 'realestate':
+        assumerList = await this.assumerEntity
+          .createQueryBuilder('assumer')
+          .leftJoinAndSelect(
+            Assumption,
+            'asmpt',
+            'asmpt.assumerId = assumer.id',
+          )
+          .leftJoinAndSelect(
+            Realeststate,
+            'realestate',
+            'realestate.propertyId = asmpt.propertyId',
+          )
+          .leftJoinAndSelect(User, 'user', 'user.id = assumer.userId')
+          .where('asmpt.propertyId =:propertyId', { propertyId })
+          .andWhere('asmpt.isActive =:isActive', { isActive: 1 })
+          .select(['user', 'assumer', 'asmpt'])
+          .getRawMany();
+        break;
+      case 'jewelry':
+        assumerList = await this.assumerEntity
+          .createQueryBuilder('assumer')
+          .leftJoinAndSelect(
+            Assumption,
+            'asmpt',
+            'asmpt.assumerId = assumer.id',
+          )
+          .leftJoinAndSelect(
+            JewelryEntity,
+            'jewelry',
+            'jewelry.propertyId = asmpt.propertyId',
+          )
+          .leftJoinAndSelect(User, 'user', 'user.id = assumer.userId')
+          .where('asmpt.propertyId =:propertyId', { propertyId })
+          .andWhere('asmpt.isActive =:isActive', { isActive: 1 })
+          .select(['user', 'assumer', 'asmpt'])
+          .getRawMany();
+        break;
+      default:
+        console.log(
+          'No propertyType => service/my-property/my-property.service.ts',
+        );
+    }
+>>>>>>> Stashed changes
+    console.log(assumerList);
+>>>>>>> Stashed changes
     return {
       code: 200,
       status: 1,
@@ -249,12 +369,12 @@ export class MyPropertyService {
       data: assumerList as unknown as AssumerListModel,
     };
   }
-  async removeAssumer(userId: number): Promise<ResponseData<string>> {
+  async removeAssumer(assumerId: number): Promise<ResponseData<string>> {
     this.assumptionEntity
       .createQueryBuilder('assumption')
       .update(Assumption)
       .set({ isActive: '0' })
-      .where('assumption.userId =:userId', { userId })
+      .where('assumption.assumerId =:assumerId', { assumerId })
       .execute();
 
     return {
@@ -289,6 +409,15 @@ export class MyPropertyService {
       .select(['id'])
       .where('email =:userEmail', { userEmail: email })
       .execute();
+    const property = await this.propertyEntity
+      .createQueryBuilder('property')
+      .insert()
+      .into(Property)
+      .values({
+        userId: user[0].id,
+        property_type: 'jewelry',
+      })
+      .execute();
 
     this.jewelryEntity
       .createQueryBuilder('jewelries')
@@ -309,7 +438,15 @@ export class MyPropertyService {
         jewelry_grams: grams,
         jewelry_material: material,
         jewelry_image: JSON.stringify(pathLists),
+<<<<<<< Updated upstream
         isDropped: '0',
+=======
+<<<<<<< Updated upstream
+=======
+        isDropped: '0',
+        propertyId: property.raw.insertId,
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
       })
       .execute();
 
@@ -329,7 +466,7 @@ export class MyPropertyService {
 
     const subQ = await this.jewelryEntity
       .createQueryBuilder('jj')
-      .innerJoin(Assumption, 'asmpt', 'asmpt.property_id = jj.id')
+      .innerJoin(Assumption, 'asmpt', 'asmpt.propertyId = jj.propertyId')
       .innerJoin(
         Assumer,
         'asmr',
@@ -376,6 +513,11 @@ export class MyPropertyService {
       data: jewelry,
     };
   }
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
   async updateCertainJewelry(
     jewelryInfo: UpdateJewelryInformationModel,
   ): Promise<ResponseData<string>> {
@@ -445,6 +587,7 @@ export class MyPropertyService {
   async getActiveUserRealestate(param: {
     email: string;
     realestateType: string;
+<<<<<<< Updated upstream
   }) {
     console.log(param);
 
@@ -469,12 +612,36 @@ export class MyPropertyService {
     console.log(uploaderInfo);
     // console.log(pathLists);
 
+=======
+  }): Promise<ResponseData<MyRealestatePropertyModel[]>> {
+    const { realestateType, email } = param;
+    let tableName = null;
+    let asTableName = '';
+
+    switch (realestateType) {
+      case 'house and lot':
+        tableName = HouseAndLot;
+        asTableName = 'hal';
+        break;
+      case 'house':
+        tableName = House;
+        asTableName = 'house';
+        break;
+      case 'lot':
+        tableName = Lot;
+        asTableName = 'lot';
+        break;
+      default:
+        console.log('No realestateType');
+    }
+>>>>>>> Stashed changes
     const user = await this.userEntity
       .createQueryBuilder('user')
       .select(['id'])
       .where('email =:email', { email })
       .getRawOne();
 
+<<<<<<< Updated upstream
     const { id } = user;
 
     const realestate = await this.realestateEntity
@@ -494,11 +661,225 @@ export class MyPropertyService {
       })
       .execute();
     const { insertId } = realestate.raw;
+=======
+    const subQ = await this.realestateEntity
+      .createQueryBuilder('realestate')
+      .innerJoin(
+        Assumption,
+        'asmpt',
+        'asmpt.propertyId = realestate.propertyId',
+      )
+      .innerJoin(
+        Assumer,
+        'asmr',
+        'asmr.id = asmpt.assumerId AND asmpt.isActive = 1',
+      )
+      .select('COUNT(realestate.id)')
+      .getSql();
+
+    const realestate = await this.realestateEntity
+      .createQueryBuilder('realestate')
+      .innerJoinAndSelect(
+        tableName,
+        asTableName,
+        `${asTableName}.realestateId = realestate.id`,
+      )
+      .select(['realestate', `${asTableName}`, `(${subQ}) as totalAssumption`])
+      .where('realestate.userId =:userId', { userId: user.id })
+      .andWhere('realestate.isDropped =0')
+      .getRawMany();
+
+    // console.log(realestate);
+    // console.log(user);
+    return {
+      code: 200,
+      status: 1,
+      message: 'Realestate properties.',
+      data: realestate,
+    };
+  }
+  async uploadRealestateProperty(
+    uploaderInfo: RealestateOwnerModel,
+    pathLists: string[],
+  ): Promise<ResponseData<string>> {
+    try {
+      const {
+        email,
+        realestateType,
+        owner,
+        developer,
+        downpayment,
+        location,
+        installmentpaid,
+        installmentduration,
+        delinquent,
+        description,
+      } = uploaderInfo;
+
+      const user = await this.userEntity
+        .createQueryBuilder('user')
+        .select(['id'])
+        .where('email =:email', { email })
+        .getRawOne();
+
+      const { id } = user;
+      const property = await this.propertyEntity
+        .createQueryBuilder('property')
+        .insert()
+        .into(Property)
+        .values({
+          userId: () => id.toString(),
+          property_type: 'realestate',
+        })
+        .execute();
+
+      const realestate = await this.realestateEntity
+        .createQueryBuilder('realestate')
+        .insert()
+        .into(Realeststate)
+        .values({
+          owner: owner,
+          realestateType: realestateType,
+          location: location,
+          downpayment: downpayment.toString(),
+          installmentpaid: installmentpaid.toString(),
+          installmentduration,
+          delinquent,
+          description,
+          userId: () => (user.userId = id),
+          propertyId: property.raw.insertId,
+        })
+        .execute();
+      const { insertId } = realestate.raw;
+
+      switch (realestateType) {
+        case 'house and lot':
+          this.halEntity
+            .createQueryBuilder('hal')
+            .insert()
+            .into(HouseAndLot)
+            .values({
+              developer,
+              realestateId: insertId,
+              hal_front_image: JSON.stringify(pathLists),
+            })
+            .execute();
+          break;
+        case 'house':
+          this.houseEntity
+            .createQueryBuilder('house')
+            .insert()
+            .into(House)
+            .values({
+              developer,
+              realestateId: insertId,
+              house_front_image: JSON.stringify(pathLists),
+            })
+            .execute();
+          break;
+        case 'lot':
+          this.lotEntity
+            .createQueryBuilder('lot')
+            .insert()
+            .into(Lot)
+            .values({
+              realestateId: insertId,
+              lot_image: JSON.stringify(pathLists),
+            })
+            .execute();
+          break;
+        default:
+          console.log('No realestateType');
+      }
+
+      return {
+        code: 200,
+        status: 1,
+        message: `${realestateType} Property was uploaded.`,
+        data: `${realestateType} Property was uploaded.`,
+      };
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  async getCertainRealestate(param: {
+    realestateType: string;
+    realestateID: number;
+  }): Promise<ResponseData<MyRealestatePropertyModel[]>> {
+    const { realestateType, realestateID } = param;
+
+    const tableName =
+      realestateType === 'house and lot'
+        ? HouseAndLot
+        : realestateType === 'house'
+        ? House
+        : Lot;
+    const asTableName =
+      realestateType === 'house and lot'
+        ? 'hal'
+        : realestateType === 'house'
+        ? 'house'
+        : 'lot';
+    const realestate = await this.realestateEntity
+      .createQueryBuilder('realestate')
+      .innerJoinAndSelect(
+        tableName,
+        asTableName,
+        `${asTableName}.realestateId = realestate.id`,
+      )
+      .select(['realestate', `${asTableName}`])
+      .where('realestate.id =:realestateID', { realestateID })
+      .andWhere('realestate.isDropped =0')
+      .getRawOne();
+
+    // console.log(realestate);
+
+    return {
+      code: 200,
+      status: 1,
+      message: 'Certain realestate property.',
+      data: realestate,
+    };
+  }
+  async updateCertainRealestate(
+    realestateInfo: UpdateRealestateInformationModel,
+  ): Promise<ResponseData<string>> {
+    // console.log(realestateInfo);
+    const {
+      realestateType,
+      owner,
+      downpayment,
+      location,
+      installmentpaid,
+      installmentduration,
+      delinquent,
+      description,
+      developer,
+      id,
+      // realestateID,
+    } = realestateInfo;
+
+    this.realestateEntity
+      .createQueryBuilder('realestate')
+      .update(Realeststate)
+      .set({
+        owner: owner,
+        location,
+        installmentduration,
+        installmentpaid,
+        delinquent,
+        description,
+        downpayment,
+      })
+      .where('id =:realestateID', { realestateID: id })
+      .execute();
+>>>>>>> Stashed changes
 
     switch (realestateType) {
       case 'house and lot':
         this.halEntity
           .createQueryBuilder('hal')
+<<<<<<< Updated upstream
           .insert()
           .into(HouseAndLot)
           .values({
@@ -506,11 +887,19 @@ export class MyPropertyService {
             realestateId: insertId,
             hal_front_image: JSON.stringify(pathLists),
           })
+=======
+          .update(HouseAndLot)
+          .set({
+            developer,
+          })
+          .where('realestateId =:realestateId', { realestateId: id })
+>>>>>>> Stashed changes
           .execute();
         break;
       case 'house':
         this.houseEntity
           .createQueryBuilder('house')
+<<<<<<< Updated upstream
           .insert()
           .into(House)
           .values({
@@ -530,9 +919,52 @@ export class MyPropertyService {
             house_front_image: JSON.stringify(pathLists),
           })
           .execute();
+=======
+          .update(House)
+          .set({
+            developer,
+          })
+          .where('realestateId =:realestateId', { realestateId: id })
+          .execute();
+        break;
+      case 'lot':
+        // just do nothing;
+>>>>>>> Stashed changes
         break;
       default:
         console.log('No realestateType');
     }
+<<<<<<< Updated upstream
   }
+=======
+    return {
+      code: 200,
+      status: 1,
+      message: 'Certain realestate was updated',
+      data: 'Certain realestate was updated',
+    };
+  }
+  async removeCertainRealestate(param: {
+    realestateID: number;
+  }): Promise<ResponseData<string>> {
+    const { realestateID } = param;
+
+    this.realestateEntity
+      .createQueryBuilder('realestate')
+      .update(Realeststate)
+      .set({
+        isDropped: '1',
+      })
+      .where('id =:realestateID', { realestateID })
+      .execute();
+
+    return {
+      code: 200,
+      status: 1,
+      message: 'Realestate property was removed.',
+      data: 'Realestate property was removed.',
+    };
+  }
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 }

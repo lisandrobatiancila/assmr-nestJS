@@ -70,6 +70,9 @@ export interface VehicleAssumptionModel {
   vehicleImages_vehicleBackIMG: string;
   vehicleImages_vehicleCRIMG: string;
   vehicleImages_vehicleORIMG: string;
+  property_id: number;
+  property_userId: number;
+  property_property_type: string;
 } // for displaying properties, ready for assumption
 
 export interface CertainVehicleModel {
