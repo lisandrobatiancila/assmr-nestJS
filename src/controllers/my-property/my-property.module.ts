@@ -9,23 +9,13 @@ import {
   Assumption,
 } from 'src/entity/property-assumption/PropertyAssumption';
 import { JewelryEntity } from 'src/entity/my-property/my-jewelry';
-<<<<<<< Updated upstream
-=======
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
 import {
   House,
   HouseAndLot,
   Lot,
   Realeststate,
 } from 'src/entity/my-property/my-realestate';
-<<<<<<< Updated upstream
-=======
 import { Property } from 'src/entity/my-property/property';
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-
 @Module({
   controllers: [MyPropertyController],
   providers: [MyPropertyService],
@@ -37,20 +27,11 @@ import { Property } from 'src/entity/my-property/property';
       Assumer,
       Assumption,
       JewelryEntity,
-<<<<<<< Updated upstream
-=======
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
       Realeststate,
       HouseAndLot,
       House,
       Lot,
-<<<<<<< Updated upstream
-=======
       Property
->>>>>>> Stashed changes
->>>>>>> Stashed changes
     ]),
   ],
   exports: [TypeOrmModule],

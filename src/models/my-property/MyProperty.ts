@@ -119,7 +119,6 @@ export interface MyJewelryPropertyModel {
   jewelry_jewelry_material: string;
   jewelry_jewelry_image: string;
   jewelry_userId: number;
-<<<<<<< Updated upstream
 } // used this when fetching jewelry property
 
 export interface UpdateJewelryInformationModel {
@@ -139,12 +138,6 @@ export interface UpdateJewelryInformationModel {
 }
 
 export interface UploadJewelryInformationModel {
-  
-}
-=======
-<<<<<<< Updated upstream
-}
-=======
   user_id: number;
   user_email: string;
   user_firstname: string;
@@ -156,7 +149,6 @@ export interface UploadJewelryInformationModel {
   user_province: string;
   user_barangay: string;
 } // used this when fetching jewelry property
-
 export interface MyCertainJewelryModel {
   jewelry_id: number;
   jewelry_propertyId: number;
@@ -258,5 +250,3 @@ export interface UpdateRealestateInformationModel {
   description: string;
   developer?: string;
 }
->>>>>>> Stashed changes
->>>>>>> Stashed changes

@@ -1,12 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Realeststate } from 'src/entity/my-property/my-realestate';
 import {
   Assumer,
   Assumption,
 } from 'src/entity/property-assumption/PropertyAssumption';
 import { AssumptionInformationModel } from 'src/models/assumed-property/AssumedProperty';
-import { EntityManager, Repository, getManager } from 'typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class AssumedPropertyService {
