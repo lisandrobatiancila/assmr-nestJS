@@ -18,15 +18,8 @@ import {
   MyJewelryPropertyModel,
   MyRealestatePropertyModel,
   MyVehiclePropertyModel,
-<<<<<<< Updated upstream
-  UpdateJewelryInformationModel,
-=======
-<<<<<<< Updated upstream
-=======
   UpdateJewelryInformationModel,
   UpdateRealestateInformationModel,
->>>>>>> Stashed changes
->>>>>>> Stashed changes
   UpdateVehicleInformationModel,
 } from 'src/models/my-property/MyProperty';
 import {
@@ -155,11 +148,6 @@ export class MyPropertyController {
     const { jewelryID } = param;
     return this.propertyService.getCertainJewelry(jewelryID);
   }
-<<<<<<< Updated upstream
-=======
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
   @Post('update-certain-jewelry')
   updateCertainJewelryInfo(
     @Body() jewelryInfo: UpdateJewelryInformationModel,
@@ -172,19 +160,11 @@ export class MyPropertyController {
   ): Promise<ResponseData<string>> {
     return this.propertyService.removeCertainJewelry(param);
   } // for removing jewelry
-<<<<<<< Updated upstream
-  @Get('jewelry/:email')
-  async getActiveUserRealestate(
-    @Param() param: { email: string; realestateType: string },
-  ) {
-    this.propertyService.getActiveUserRealestate(param);
-=======
   @Get('realestate/:realestateType/:email')
   async getActiveUserRealestate(
     @Param() param: { email: string; realestateType: string },
   ): Promise<ResponseData<MyRealestatePropertyModel[]>> {
     return this.propertyService.getActiveUserRealestate(param);
->>>>>>> Stashed changes
   }
   @Post('realestate')
   @UseInterceptors(
@@ -200,20 +180,12 @@ export class MyPropertyController {
   uploadRealestate(
     @Body() formBody: RealestateOwnerModel,
     @UploadedFiles() images: Array<Express.Multer.File>,
-<<<<<<< Updated upstream
-  ): Promise<ResponseData<[]>> {
-=======
   ): Promise<ResponseData<[] | string>> {
->>>>>>> Stashed changes
     try {
       const pathLists: string[] = [];
 
       images.map((image) => pathLists.push(image.path));
-<<<<<<< Updated upstream
-      this.propertyService.uploadRealestateProperty(formBody, pathLists);
-=======
       return this.propertyService.uploadRealestateProperty(formBody, pathLists);
->>>>>>> Stashed changes
     } catch (error) {
       console.log(error);
       const resp: ResponseData<[]> = {
@@ -226,8 +198,6 @@ export class MyPropertyController {
       return new Promise((resolve, reject) => resolve(resp));
     }
   }
-<<<<<<< Updated upstream
-=======
   @Get('certain-realestate/:realestateType/:realestateID')
   getCertainRealestate(
     @Param() param: { realestateType: string; realestateID: number },
@@ -246,6 +216,4 @@ export class MyPropertyController {
   ): Promise<ResponseData<string>> {
     return this.propertyService.removeCertainRealestate(param);
   }
->>>>>>> Stashed changes
->>>>>>> Stashed changes
 }

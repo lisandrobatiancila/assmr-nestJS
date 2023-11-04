@@ -15,7 +15,7 @@ import { Messages, ReceiverMessage, SenderMessage } from '../messages/Messages';
 
 import { Assumer, Assumption } from '../property-assumption/PropertyAssumption';
 import { UserFeedBack } from '../feedbacks/FeedBacks';
-import { JewelryEntity } from '../my-property/my-jewelry';
+import { Jewelry } from '../my-property/my-jewelry';
 
 @Entity()
 export class User {
@@ -56,8 +56,8 @@ export class User {
   // senderMessage: SenderMessage;
   @OneToMany((type) => UserFeedBack, (feedbacks) => feedbacks.user)
   feedBacks: UserFeedBack[];
-  @OneToMany((type) => JewelryEntity, (jewelries) => jewelries.user)
-  jewelries: JewelryEntity[];
+  @OneToMany((type) => Jewelry, (jewelries) => jewelries.user)
+  jewelries: Jewelry[];
 }
 
 @Entity()

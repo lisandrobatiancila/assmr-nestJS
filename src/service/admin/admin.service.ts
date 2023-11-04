@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { JewelryEntity } from 'src/entity/my-property/my-jewelry';
+import { Jewelry } from 'src/entity/my-property/my-jewelry';
 import { Vehicle } from 'src/entity/my-property/my-property';
 import {
   Realeststate,
@@ -26,8 +26,8 @@ export class AdminService {
     @InjectRepository(Vehicle) private vehicleEntity: Repository<Vehicle>,
     @InjectRepository(Realeststate)
     private realestateEntity: Repository<Realeststate>,
-    @InjectRepository(JewelryEntity)
-    private jewelryEntity: Repository<JewelryEntity>,
+    @InjectRepository(Jewelry)
+    private Jewelry: Repository<Jewelry>,
     @InjectRepository(HouseAndLot) private halEntity: Repository<HouseAndLot>,
     @InjectRepository(House) private houseEntity: Repository<House>,
     @InjectRepository(Lot) private lotEntity: Repository<Lot>,
@@ -78,7 +78,7 @@ export class AdminService {
       .groupBy('realestate.id')
       .getRawMany();
 
-    const jewelry = await this.jewelryEntity
+    const jewelry = await this.Jewelry
       .createQueryBuilder('jewelry')
       .innerJoin(Assumer, 'assumer')
       .innerJoin(Assumption, 'assumpt')

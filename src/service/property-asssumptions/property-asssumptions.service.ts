@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Body, Get, Injectable, Param } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { JewelryEntity } from 'src/entity/my-property/my-jewelry';
+import { Jewelry } from 'src/entity/my-property/my-jewelry';
 import { Vehicle } from 'src/entity/my-property/my-property';
 import {
   House,
@@ -44,8 +44,8 @@ export class PropertyAsssumptionsService {
     @InjectRepository(HouseAndLot) private halEntity: Repository<HouseAndLot>,
     @InjectRepository(House) private houseEntity: Repository<House>,
     @InjectRepository(Lot) private lotEntity: Repository<Lot>,
-    @InjectRepository(JewelryEntity)
-    private jewelryEntity: Repository<JewelryEntity>,
+    @InjectRepository(Jewelry)
+    private Jewelry: Repository<Jewelry>,
     private dataSource: DataSource,
   ) {}
   async getAllVehiclesBackUp(): Promise<
@@ -328,7 +328,7 @@ export class PropertyAsssumptionsService {
     }
 
     concatFilter = concatFilter.substring(0, concatFilter.length - 4);
-    const jewelries = await this.jewelryEntity
+    const jewelries = await this.Jewelry
       .createQueryBuilder('jewelry')
       .innerJoinAndSelect(User, 'user', 'user.id = jewelry.userId')
       .where(`${concatFilter}`)
@@ -344,7 +344,7 @@ export class PropertyAsssumptionsService {
   async getCertainJewelry(
     jewelryID: number,
   ): Promise<ResponseData<MyCertainJewelryModel>> {
-    const jewelry = await this.jewelryEntity
+    const jewelry = await this.Jewelry
       .createQueryBuilder('jewelry')
       .innerJoinAndSelect(User, 'user', 'user.id = jewelry.userId')
       .where('propertyId =:propertyId', { propertyId: jewelryID })

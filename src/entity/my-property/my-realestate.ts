@@ -12,11 +12,8 @@ export class Realeststate {
   @PrimaryGeneratedColumn()
   id: number;
   @Column()
-<<<<<<< Updated upstream
-=======
   propertyId: number;
   @Column()
->>>>>>> Stashed changes
   userId: number;
   @Column()
   owner: string;
@@ -36,13 +33,10 @@ export class Realeststate {
   delinquent: string;
   @Column()
   description: string;
-<<<<<<< Updated upstream
-=======
   @Column({
     length: 5,
   })
   isDropped: string;
->>>>>>> Stashed changes
 
   @OneToMany((type) => Lot, (lot) => lot.realestate)
   lots: Lot[];
