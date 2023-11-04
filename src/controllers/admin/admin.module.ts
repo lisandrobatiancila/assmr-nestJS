@@ -10,7 +10,7 @@ import {
   Lot,
   Realeststate,
 } from 'src/entity/my-property/my-realestate';
-import { JewelryEntity } from 'src/entity/my-property/my-jewelry';
+import { Jewelry } from 'src/entity/my-property/my-jewelry';
 import { Property } from 'src/entity/my-property/property';
 import {
   Assumer,
@@ -27,7 +27,7 @@ import {
       HouseAndLot,
       House,
       Lot,
-      JewelryEntity,
+      Jewelry,
       Property,
       Assumer,
       Assumption,
