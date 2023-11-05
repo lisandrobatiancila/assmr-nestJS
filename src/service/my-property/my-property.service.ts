@@ -3,6 +3,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Jewelry } from 'src/entity/my-property/my-jewelry';
 import { Vehicle, VehicleImage } from 'src/entity/my-property/my-property';
 import {
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
   House,
   HouseAndLot,
   Lot,
@@ -10,6 +15,10 @@ import {
 } from 'src/entity/my-property/my-realestate';
 import { Property } from 'src/entity/my-property/property';
 import {
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
   Assumer,
   Assumption,
 } from 'src/entity/property-assumption/PropertyAssumption';
@@ -19,8 +28,16 @@ import {
   MyJewelryPropertyModel,
   MyRealestatePropertyModel,
   MyVehiclePropertyModel,
+<<<<<<< Updated upstream
   UpdateJewelryInformationModel,
   UpdateRealestateInformationModel,
+=======
+<<<<<<< Updated upstream
+=======
+  UpdateJewelryInformationModel,
+  UpdateRealestateInformationModel,
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
   UpdateVehicleInformationModel,
 } from 'src/models/my-property/MyProperty';
 import {
@@ -40,14 +57,25 @@ export class MyPropertyService {
     @InjectRepository(Assumer) private assumerEntity: Repository<Assumer>,
     @InjectRepository(Assumption)
     private assumptionEntity: Repository<Assumption>,
+<<<<<<< Updated upstream
     @InjectRepository(Jewelry)
     private Jewelry: Repository<Jewelry>,
+=======
+    @InjectRepository(JewelryEntity)
+    private jewelryEntity: Repository<JewelryEntity>,
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
     @InjectRepository(Realeststate)
     private realestateEntity: Repository<Realeststate>,
     @InjectRepository(HouseAndLot) private halEntity: Repository<HouseAndLot>,
     @InjectRepository(House) private houseEntity: Repository<House>,
     @InjectRepository(Lot) private lotEntity: Repository<Lot>,
     @InjectRepository(Property) private propertyEntity: Repository<Property>,
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
   ) {}
   async uploadVehicleProperty(
     uploaderInfo: VehicleOwnerModel,
@@ -246,6 +274,23 @@ export class MyPropertyService {
 
     // console.log(assumer);
   }
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+  async listAssumerOfMyProperty(
+    propertyId: number,
+  ): Promise<ResponseData<AssumerListModel>> {
+    const assumerList = await this.assumerEntity
+      .createQueryBuilder('assumer')
+      .leftJoinAndSelect(Assumption, 'asmpt', 'asmpt.assumerId = assumer.id')
+      .leftJoinAndSelect(Vehicle, 'vehicle', 'vehicle.id = asmpt.property_id')
+      .leftJoinAndSelect(User, 'user', 'user.id = assumer.userId')
+      .where('asmpt.property_id =:propertyId', { propertyId })
+      .andWhere('asmpt.isActive =:isActive', { isActive: 1 })
+      .select(['user', 'assumer', 'asmpt'])
+      .getRawMany();
+=======
+>>>>>>> Stashed changes
   async listAssumerOfMyProperty(param: {
     propertyId: number;
     propertyType: string;
@@ -301,7 +346,11 @@ export class MyPropertyService {
             'asmpt.assumerId = assumer.id',
           )
           .leftJoinAndSelect(
+<<<<<<< Updated upstream
             Jewelry,
+=======
+            JewelryEntity,
+>>>>>>> Stashed changes
             'jewelry',
             'jewelry.propertyId = asmpt.propertyId',
           )
@@ -316,7 +365,12 @@ export class MyPropertyService {
           'No propertyType => service/my-property/my-property.service.ts',
         );
     }
+<<<<<<< Updated upstream
+    // console.log(assumerList);
+=======
+>>>>>>> Stashed changes
     console.log(assumerList);
+>>>>>>> Stashed changes
     return {
       code: 200,
       status: 1,
@@ -366,6 +420,8 @@ export class MyPropertyService {
       .execute();
     const property = await this.propertyEntity
       .createQueryBuilder('property')
+<<<<<<< Updated upstream
+=======
       .insert()
       .into(Property)
       .values({
@@ -374,8 +430,18 @@ export class MyPropertyService {
       })
       .execute();
 
-    this.Jewelry
+    this.jewelryEntity
       .createQueryBuilder('jewelries')
+>>>>>>> Stashed changes
+      .insert()
+      .into(Property)
+      .values({
+        userId: user[0].id,
+        property_type: 'jewelry',
+      })
+      .execute();
+
+    this.Jewelry.createQueryBuilder('jewelries')
       .insert()
       .into(Jewelry)
       .values({
@@ -393,8 +459,16 @@ export class MyPropertyService {
         jewelry_grams: grams,
         jewelry_material: material,
         jewelry_image: JSON.stringify(pathLists),
+<<<<<<< Updated upstream
         isDropped: '0',
         propertyId: property.raw.insertId,
+=======
+<<<<<<< Updated upstream
+=======
+        isDropped: '0',
+        propertyId: property.raw.insertId,
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
       })
       .execute();
 
@@ -412,8 +486,12 @@ export class MyPropertyService {
   }): Promise<ResponseData<MyJewelryPropertyModel[]>> {
     const { email } = param;
 
-    const subQ = await this.Jewelry
+<<<<<<< Updated upstream
+    const subQ = await this.Jewelry.createQueryBuilder('jj')
+=======
+    const subQ = await this.jewelryEntity
       .createQueryBuilder('jj')
+>>>>>>> Stashed changes
       .innerJoin(Assumption, 'asmpt', 'asmpt.propertyId = jj.propertyId')
       .innerJoin(
         Assumer,
@@ -429,8 +507,7 @@ export class MyPropertyService {
       .where('email =:email', { email })
       .getRawOne();
 
-    const jewelries = await this.Jewelry
-      .createQueryBuilder('jewelry')
+    const jewelries = await this.Jewelry.createQueryBuilder('jewelry')
       .select(['jewelry', `(${subQ}) as totalAssumption`])
       .where('userId =:userId', { userId: user.id })
       .andWhere('jewelry.isDropped =0')
@@ -448,8 +525,7 @@ export class MyPropertyService {
   async getCertainJewelry(
     jewelryId: number,
   ): Promise<ResponseData<MyJewelryPropertyModel>> {
-    const jewelry = await this.Jewelry
-      .createQueryBuilder('jewelry')
+    const jewelry = await this.Jewelry.createQueryBuilder('jewelry')
       .select(['jewelry'])
       .where('id =:id', { id: jewelryId })
       .getRawOne();
@@ -461,6 +537,11 @@ export class MyPropertyService {
       data: jewelry,
     };
   }
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
   async updateCertainJewelry(
     jewelryInfo: UpdateJewelryInformationModel,
   ): Promise<ResponseData<string>> {
@@ -479,9 +560,14 @@ export class MyPropertyService {
       grams,
       material,
     } = jewelryInfo;
-    this.Jewelry
-      .createQueryBuilder('jewelry')
+<<<<<<< Updated upstream
+    this.Jewelry.createQueryBuilder('jewelry')
       .update(Jewelry)
+=======
+    this.jewelryEntity
+      .createQueryBuilder('jewelry')
+      .update(JewelryEntity)
+>>>>>>> Stashed changes
       .set({
         jewelry_owner: owner,
         jewelry_name: jewelryName,
@@ -511,9 +597,14 @@ export class MyPropertyService {
   }): Promise<ResponseData<string>> {
     const { jewelryID } = param;
 
-    this.Jewelry
-      .createQueryBuilder('jewelry')
+<<<<<<< Updated upstream
+    this.Jewelry.createQueryBuilder('jewelry')
       .update(Jewelry)
+=======
+    this.jewelryEntity
+      .createQueryBuilder('jewelry')
+      .update(JewelryEntity)
+>>>>>>> Stashed changes
       .set({
         isDropped: '1',
       })
@@ -532,6 +623,10 @@ export class MyPropertyService {
     realestateType: string;
   }): Promise<ResponseData<MyRealestatePropertyModel[]>> {
     const { realestateType, email } = param;
+<<<<<<< Updated upstream
+    // console.log(param);
+=======
+>>>>>>> Stashed changes
     let tableName = null;
     let asTableName = '';
 
@@ -627,7 +722,10 @@ export class MyPropertyService {
           property_type: 'realestate',
         })
         .execute();
+<<<<<<< Updated upstream
+=======
 
+>>>>>>> Stashed changes
       const realestate = await this.realestateEntity
         .createQueryBuilder('realestate')
         .insert()
@@ -641,6 +739,10 @@ export class MyPropertyService {
           installmentduration,
           delinquent,
           description,
+<<<<<<< Updated upstream
+          isDropped: '0',
+=======
+>>>>>>> Stashed changes
           userId: () => (user.userId = id),
           propertyId: property.raw.insertId,
         })
@@ -824,4 +926,8 @@ export class MyPropertyService {
       data: 'Realestate property was removed.',
     };
   }
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 }

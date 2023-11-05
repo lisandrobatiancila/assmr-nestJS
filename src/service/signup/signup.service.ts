@@ -24,6 +24,24 @@ export class SignupService {
       password,
     } = userForm;
 
+    const userExists = await this.accountEntity.findOne({
+      select: {
+        email: true,
+      },
+      where: {
+        email,
+      },
+    });
+
+    if (userExists) {
+      return {
+        code: 1,
+        status: 1,
+        message: 'User already exists',
+        data: [],
+      };
+    }
+
     const user = await this.dataSource
       .createQueryBuilder()
       .insert()

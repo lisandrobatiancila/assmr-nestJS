@@ -31,7 +31,6 @@ export class MessagesService {
     activeUser,
     otherUser,
   }: IChatWithModel): Promise<ResponseData<IChatWithMessagesModel[]>> {
-    // console.log(activeUser, otherUser)
     const messages = await this.messagesEntity
       .createQueryBuilder('messages')
       .innerJoin(
@@ -60,7 +59,6 @@ export class MessagesService {
       .groupBy('messages.senderMessageId, messages.receiverMessageId')
       .select(['messages', 'user', 'receiverMess', 'senderMess'])
       .getRawMany();
-    // console.log(messages);
 
     return {
       code: 200,
@@ -179,29 +177,12 @@ export class MessagesService {
       ])
       .getRawMany();
     // .getSql();
-
-    const filteredMessages = [];
-    messageList.map((message: IChatWithListModel) => {
-      if (filteredMessages.length === 0) {
-        filteredMessages.push(message);
-      } else {
-        filteredMessages.map((fm: IChatWithListModel) => {
-          if (
-            fm.userSend_email === message.userSend_email ||
-            fm.receiverMess_email === message.receiverMess_email
-          ) {
-            return;
-          } else filteredMessages.push(message);
-        });
-      }
-    });
-    // console.log(filteredMessages);
-    // console.log(messageList);
+      console.log(messageList);
     return {
       code: 200,
       status: 1,
       message: 'allMy Chattlists',
-      data: filteredMessages as unknown as IChatWithListModel[],
+      data: messageList as unknown as IChatWithListModel[],
     };
   }
 }

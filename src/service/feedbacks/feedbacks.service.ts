@@ -38,9 +38,9 @@ export class FeedbacksService {
   async getUserFeedBacks(): Promise<ResponseData<UserFeedBacksModel[]>> {
     const feedBackList = await this.userFeedBackEntity
       .createQueryBuilder('feedbacks')
+      .orderBy('feedbacks.feedBackDate', 'DESC')
       .getMany();
 
-    // console.log(feedBackList);
     return {
       code: 200,
       status: 1,
