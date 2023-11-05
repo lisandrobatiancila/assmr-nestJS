@@ -10,11 +10,7 @@ import {
   Lot,
   Realeststate,
 } from 'src/entity/my-property/my-realestate';
-<<<<<<< Updated upstream
 import { Jewelry } from 'src/entity/my-property/my-jewelry';
-=======
-import { JewelryEntity } from 'src/entity/my-property/my-jewelry';
->>>>>>> Stashed changes
 import { Property } from 'src/entity/my-property/property';
 import {
   Assumer,
@@ -31,11 +27,7 @@ import {
       HouseAndLot,
       House,
       Lot,
-<<<<<<< Updated upstream
       Jewelry,
-=======
-      JewelryEntity,
->>>>>>> Stashed changes
       Property,
       Assumer,
       Assumption,

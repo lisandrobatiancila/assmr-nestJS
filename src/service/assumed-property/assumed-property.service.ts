@@ -1,12 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Realeststate } from 'src/entity/my-property/my-realestate';
 import {
   Assumer,
   Assumption,
 } from 'src/entity/property-assumption/PropertyAssumption';
 import { AssumptionInformationModel } from 'src/models/assumed-property/AssumedProperty';
-import { EntityManager, Repository, getManager } from 'typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class AssumedPropertyService {
@@ -42,7 +41,6 @@ export class AssumedPropertyService {
     // console.log(assumed_records);
     const realestateRecords = await this.assumerEntity
       .createQueryBuilder('assumer')
-<<<<<<< Updated upstream
       .innerJoinAndSelect('assumption', 'assumption')
       .innerJoinAndSelect('user', 'user')
       .innerJoinAndSelect('realeststate', 'realeststate')
@@ -61,34 +59,11 @@ export class AssumedPropertyService {
       .groupBy('assumption.propertyId')
       .getRawMany();
 
-=======
-      .innerJoin('assumption', 'assumption')
-      .innerJoin('user', 'user')
-      .innerJoin('realeststate', 'realeststate')
-      .innerJoin('house_and_lot', 'hal')
-      .innerJoin('property', 'property')
-      .select(['user', 'assumption', 'realeststate', 'hal', 'property'])
-      // .distinct()
-      .where('user.id = assumption.propowner_id')
-      .andWhere('property.id = assumption.propertyId')
-      .andWhere('realeststate.userId = user.id')
-      .andWhere('realeststate.id = hal.realestateId')
-      .andWhere('assumer.userId =:userId', { userId })
-      .andWhere('assumption.userId =:userId', { userId })
-      .andWhere('assumption.propertyId = realeststate.propertyId')
-      .andWhere('assumption.isActive =:isActive', { isActive: '1' })
-      .execute();
-
->>>>>>> Stashed changes
     const jewelryRecords = await this.assumerEntity
       .createQueryBuilder('assumer')
       .innerJoin('assumption', 'assumption')
       .innerJoin('user', 'user')
-<<<<<<< Updated upstream
       .innerJoin('jewelry', 'jewelry')
-=======
-      .innerJoin('jewelry_entity', 'jewelry')
->>>>>>> Stashed changes
       .innerJoin('property', 'property')
       // .distinct()
       .where('user.id = assumption.propowner_id')

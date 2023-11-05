@@ -1,10 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-<<<<<<< Updated upstream
 import { Jewelry } from 'src/entity/my-property/my-jewelry';
-=======
-import { JewelryEntity } from 'src/entity/my-property/my-jewelry';
->>>>>>> Stashed changes
 import { Vehicle } from 'src/entity/my-property/my-property';
 import {
   Realeststate,
@@ -30,13 +26,8 @@ export class AdminService {
     @InjectRepository(Vehicle) private vehicleEntity: Repository<Vehicle>,
     @InjectRepository(Realeststate)
     private realestateEntity: Repository<Realeststate>,
-<<<<<<< Updated upstream
     @InjectRepository(Jewelry)
     private Jewelry: Repository<Jewelry>,
-=======
-    @InjectRepository(JewelryEntity)
-    private jewelryEntity: Repository<JewelryEntity>,
->>>>>>> Stashed changes
     @InjectRepository(HouseAndLot) private halEntity: Repository<HouseAndLot>,
     @InjectRepository(House) private houseEntity: Repository<House>,
     @InjectRepository(Lot) private lotEntity: Repository<Lot>,
@@ -54,10 +45,7 @@ export class AdminService {
       .where('vehicle.propertyId = assumpt.propertyId')
       .andWhere('userAssumer.id = assumpt.userId')
       .andWhere('userOwner.id = property.userId')
-<<<<<<< Updated upstream
       .andWhere('property.id = assumpt.propertyId')
-=======
->>>>>>> Stashed changes
       .select([
         'vehicle',
         'userOwner',
@@ -66,11 +54,7 @@ export class AdminService {
         'assumpt',
         'property',
       ])
-<<<<<<< Updated upstream
       .groupBy('assumpt.id')
-=======
-      .groupBy('vehicle.id')
->>>>>>> Stashed changes
       .getRawMany();
 
     const realestate = await this.realestateEntity
@@ -84,10 +68,7 @@ export class AdminService {
       .andWhere('realestate.propertyId = property.id')
       .andWhere('userAssumer.id = assumpt.userId')
       .andWhere('userOwner.id = property.userId')
-<<<<<<< Updated upstream
       .andWhere('property.id = assumpt.propertyId')
-=======
->>>>>>> Stashed changes
       .select([
         'realestate',
         'userOwner',
@@ -96,18 +77,10 @@ export class AdminService {
         'assumpt',
         'property',
       ])
-<<<<<<< Updated upstream
       .groupBy('assumpt.id')
       .getRawMany();
 
     const jewelry = await this.Jewelry.createQueryBuilder('jewelry')
-=======
-      .groupBy('realestate.id')
-      .getRawMany();
-
-    const jewelry = await this.jewelryEntity
-      .createQueryBuilder('jewelry')
->>>>>>> Stashed changes
       .innerJoin(Assumer, 'assumer')
       .innerJoin(Assumption, 'assumpt')
       .innerJoin(User, 'userAssumer')
@@ -117,10 +90,7 @@ export class AdminService {
       .andWhere('jewelry.propertyId = property.id')
       .andWhere('userAssumer.id = assumpt.userId')
       .andWhere('userOwner.id = property.userId')
-<<<<<<< Updated upstream
       .andWhere('property.id = assumpt.propertyId')
-=======
->>>>>>> Stashed changes
       .select([
         'jewelry',
         'userOwner',
@@ -129,19 +99,11 @@ export class AdminService {
         'assumpt',
         'property',
       ])
-<<<<<<< Updated upstream
       .groupBy('assumpt.id')
       .getRawMany();
 
     concatResult = [...vehicle, ...realestate, ...jewelry];
 
-=======
-      .groupBy('jewelry.id')
-      .getRawMany();
-
-    concatResult = [...vehicle, ...realestate, ...jewelry];
-    console.log(concatResult);
->>>>>>> Stashed changes
     return {
       code: 200,
       status: 1,

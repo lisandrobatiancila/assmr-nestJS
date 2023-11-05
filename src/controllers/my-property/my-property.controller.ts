@@ -18,16 +18,8 @@ import {
   MyJewelryPropertyModel,
   MyRealestatePropertyModel,
   MyVehiclePropertyModel,
-<<<<<<< Updated upstream
   UpdateJewelryInformationModel,
   UpdateRealestateInformationModel,
-=======
-<<<<<<< Updated upstream
-=======
-  UpdateJewelryInformationModel,
-  UpdateRealestateInformationModel,
->>>>>>> Stashed changes
->>>>>>> Stashed changes
   UpdateVehicleInformationModel,
 } from 'src/models/my-property/MyProperty';
 import {
@@ -156,11 +148,6 @@ export class MyPropertyController {
     const { jewelryID } = param;
     return this.propertyService.getCertainJewelry(jewelryID);
   }
-<<<<<<< Updated upstream
-=======
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
   @Post('update-certain-jewelry')
   updateCertainJewelryInfo(
     @Body() jewelryInfo: UpdateJewelryInformationModel,
@@ -229,8 +216,4 @@ export class MyPropertyController {
   ): Promise<ResponseData<string>> {
     return this.propertyService.removeCertainRealestate(param);
   }
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
 }
