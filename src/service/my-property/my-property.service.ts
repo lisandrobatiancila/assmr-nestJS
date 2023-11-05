@@ -552,32 +552,42 @@ export class MyPropertyService {
       .where('email =:email', { email })
       .getRawOne();
 
-    const subQ = await this.realestateEntity
-      .createQueryBuilder('realestate')
-      .innerJoin(
-        Assumption,
-        'asmpt',
-        'asmpt.propertyId = realestate.propertyId',
-      )
-      .innerJoin(
-        Assumer,
-        'asmr',
-        'asmr.id = asmpt.assumerId AND asmpt.isActive = 1',
-      )
-      .select('COUNT(realestate.id)')
-      .getSql();
+    // const subQ = await this.realestateEntity
+    //   .createQueryBuilder('realestate')
+    //   .innerJoin(
+    //     Assumption,
+    //     'asmpt',
+    //     'asmpt.propertyId = realestate.propertyId',
+    //   )
+    //   .innerJoin(
+    //     Assumer,
+    //     'asmr',
+    //     'asmr.id = asmpt.assumerId AND asmpt.isActive = 1',
+    //   )
+    //   .select('COUNT(realestate.id)')
+    //   .getSql();
+    const subQ = this.assumptionEntity.createQueryBuilder('assumption');
 
     const realestate = await this.realestateEntity
       .createQueryBuilder('realestate')
+      // .innerJoinAndSelect(Assumption, 'assumpt')
       .innerJoinAndSelect(
         tableName,
         asTableName,
         `${asTableName}.realestateId = realestate.id`,
       )
-      .select(['realestate', `${asTableName}`, `(${subQ}) as totalAssumption`])
+      .select([
+        'realestate',
+        `${asTableName}`,
+        `(${subQ
+          .select('COUNT(*)')
+          .where('realestate.propertyId = assumption.propertyId')
+          .getSql()}) as totalAssumption`,
+      ])
       .where('realestate.userId =:userId', { userId: user.id })
       .andWhere('realestate.isDropped =0')
       .getRawMany();
+      // .getSql();
 
     // console.log(realestate);
     // console.log(user);
