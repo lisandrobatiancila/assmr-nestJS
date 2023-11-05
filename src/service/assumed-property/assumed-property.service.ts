@@ -42,6 +42,26 @@ export class AssumedPropertyService {
     // console.log(assumed_records);
     const realestateRecords = await this.assumerEntity
       .createQueryBuilder('assumer')
+<<<<<<< Updated upstream
+      .innerJoinAndSelect('assumption', 'assumption')
+      .innerJoinAndSelect('user', 'user')
+      .innerJoinAndSelect('realeststate', 'realeststate')
+      .innerJoinAndSelect('property', 'property')
+      .select(['user', 'assumption', 'realeststate', 'property'])
+      .distinct()
+      .where('property.property_type = "realestate"')
+
+      .andWhere('user.id = assumption.propowner_id')
+      .andWhere('property.id = assumption.propertyId')
+      .andWhere('realeststate.userId = user.id')
+      .andWhere('assumption.propertyId = realeststate.propertyId')
+      .andWhere('assumer.userId =:userId', { userId })
+      .andWhere('assumption.userId =:userId', { userId })
+      .andWhere('assumption.isActive =:isActive', { isActive: '1' })
+      .groupBy('assumption.propertyId')
+      .getRawMany();
+
+=======
       .innerJoin('assumption', 'assumption')
       .innerJoin('user', 'user')
       .innerJoin('realeststate', 'realeststate')
@@ -59,11 +79,16 @@ export class AssumedPropertyService {
       .andWhere('assumption.isActive =:isActive', { isActive: '1' })
       .execute();
 
+>>>>>>> Stashed changes
     const jewelryRecords = await this.assumerEntity
       .createQueryBuilder('assumer')
       .innerJoin('assumption', 'assumption')
       .innerJoin('user', 'user')
+<<<<<<< Updated upstream
+      .innerJoin('jewelry', 'jewelry')
+=======
       .innerJoin('jewelry_entity', 'jewelry')
+>>>>>>> Stashed changes
       .innerJoin('property', 'property')
       // .distinct()
       .where('user.id = assumption.propowner_id')
