@@ -10,11 +10,7 @@ import {
 } from 'src/entity/property-assumption/PropertyAssumption';
 import { Notifications } from 'src/entity/notifications/Notifications';
 import { House, HouseAndLot, Lot, Realeststate } from 'src/entity/my-property/my-realestate';
-<<<<<<< Updated upstream
 import { Jewelry } from 'src/entity/my-property/my-jewelry';
-=======
-import { JewelryEntity } from 'src/entity/my-property/my-jewelry';
->>>>>>> Stashed changes
 
 @Module({
   controllers: [PropertyAssumptionsController],
@@ -30,11 +26,7 @@ import { JewelryEntity } from 'src/entity/my-property/my-jewelry';
       HouseAndLot,
       House,
       Lot,
-<<<<<<< Updated upstream
       Jewelry,
-=======
-      JewelryEntity,
->>>>>>> Stashed changes
     ]),
   ],
   exports: [TypeOrmModule],

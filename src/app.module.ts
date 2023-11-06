@@ -43,13 +43,7 @@ import { InquiriesService } from './service/inquiries/inquiries.service';
 import { Inquiries } from './entity/inquiries/Inquiries';
 import { DashboardModule } from './controllers/dashboard/dashboard.module';
 import { DashboardService } from './service/dashboard/dashboard.service';
-<<<<<<< Updated upstream
 import { Jewelry } from './entity/my-property/my-jewelry';
-=======
-import { JewelryEntity } from './entity/my-property/my-jewelry';
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
 import {
   House,
   HouseAndLot,
@@ -59,11 +53,6 @@ import {
 import { Property } from './entity/my-property/property';
 import { AdminModule } from './controllers/admin/admin.module';
 import { AdminService } from './service/admin/admin.service';
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-
 @Module({
   imports: [
     AddressModule,
@@ -98,22 +87,12 @@ import { AdminService } from './service/admin/admin.service';
         UserFeedBack,
         Notifications,
         Inquiries,
-<<<<<<< Updated upstream
         Jewelry,
-=======
-        JewelryEntity,
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
         Realeststate,
         HouseAndLot,
         House,
         Lot,
         Property,
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
       ], // list your entity here
       synchronize: true,
     }),

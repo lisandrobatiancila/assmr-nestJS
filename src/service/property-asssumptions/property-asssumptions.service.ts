@@ -1,11 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Body, Get, Injectable, Param } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-<<<<<<< Updated upstream
 import { Jewelry } from 'src/entity/my-property/my-jewelry';
-=======
-import { JewelryEntity } from 'src/entity/my-property/my-jewelry';
->>>>>>> Stashed changes
 import { Vehicle } from 'src/entity/my-property/my-property';
 import {
   House,
@@ -48,13 +44,8 @@ export class PropertyAsssumptionsService {
     @InjectRepository(HouseAndLot) private halEntity: Repository<HouseAndLot>,
     @InjectRepository(House) private houseEntity: Repository<House>,
     @InjectRepository(Lot) private lotEntity: Repository<Lot>,
-<<<<<<< Updated upstream
     @InjectRepository(Jewelry)
     private jewelryEntiy: Repository<Jewelry>,
-=======
-    @InjectRepository(JewelryEntity)
-    private jewelryEntity: Repository<JewelryEntity>,
->>>>>>> Stashed changes
     private dataSource: DataSource,
   ) {}
   async getAllVehiclesBackUp(): Promise<
@@ -235,10 +226,6 @@ export class PropertyAsssumptionsService {
     const { realestateType, developer, owner } = payloads;
     const tempPayload = { developer, owner };
     let tableName = null;
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
     tableName =
       realestateType === 'house and lot'
         ? HouseAndLot
@@ -261,12 +248,9 @@ export class PropertyAsssumptionsService {
           owner ?? ''
         }%' AND ${astableName}.developer LIKE '%${developer ?? ''}%'`;
         concatFilter = key;
-<<<<<<< Updated upstream
       } else {
         const key = `realestate.owner LIKE '%${owner ?? ''}%'`;
         concatFilter = key;
-=======
->>>>>>> Stashed changes
       }
     }
     const realestate = await this.realestateEntity
@@ -323,11 +307,7 @@ export class PropertyAsssumptionsService {
       })
       .getRawOne();
 
-<<<<<<< Updated upstream
     // console.log(realestate);
-=======
-    console.log(realestate);
->>>>>>> Stashed changes
 
     return {
       code: 200,
@@ -350,11 +330,7 @@ export class PropertyAsssumptionsService {
     }
 
     concatFilter = concatFilter.substring(0, concatFilter.length - 4);
-<<<<<<< Updated upstream
     const jewelries = await this.jewelryEntiy
-=======
-    const jewelries = await this.jewelryEntity
->>>>>>> Stashed changes
       .createQueryBuilder('jewelry')
       .innerJoinAndSelect(User, 'user', 'user.id = jewelry.userId')
       .where(`${concatFilter}`)
@@ -370,22 +346,14 @@ export class PropertyAsssumptionsService {
   async getCertainJewelry(
     jewelryID: number,
   ): Promise<ResponseData<MyCertainJewelryModel>> {
-<<<<<<< Updated upstream
     // console.log(jewelryID);
     const jewelry = await this.jewelryEntiy
-=======
-    const jewelry = await this.jewelryEntity
->>>>>>> Stashed changes
       .createQueryBuilder('jewelry')
       .innerJoinAndSelect(User, 'user', 'user.id = jewelry.userId')
       .where('propertyId =:propertyId', { propertyId: jewelryID })
       .andWhere('isDropped = 0')
       .getRawOne();
-<<<<<<< Updated upstream
     // console.log(jewelry);
-=======
-    console.log(jewelry);
->>>>>>> Stashed changes
     return {
       code: 200,
       status: 1,
