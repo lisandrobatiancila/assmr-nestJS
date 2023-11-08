@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Jewelry } from 'src/entity/my-property/my-jewelry';
-import { Vehicle } from 'src/entity/my-property/my-property';
+import { Vehicle, VehicleImage } from 'src/entity/my-property/my-property';
 import {
   Realeststate,
   HouseAndLot,
@@ -49,19 +49,24 @@ export class AdminService {
         const Pvehicle = await this.vehicleEntity
           .createQueryBuilder('vehicle')
           .innerJoin(Property, 'property')
-          .where('vehicle.isDropped = 1 AND property.id = vehicle.propertyId')
+          .innerJoin(VehicleImage, 'vehicle_image')
+          .where('vehicle.isDropped = 0 AND property.id = vehicle.propertyId')
+          .andWhere('vehicle_image.vehicleId = vehicle.id')
+          .select(['vehicle', 'property', 'vehicle_image'])
           .getRawMany();
         const Prealestate = await this.realestateEntity
           .createQueryBuilder('realestate')
           .innerJoin(Property, 'property')
           .where(
-            'realestate.isDropped = 1 AND property.id = realestate.propertyId',
+            'realestate.isDropped = 0 AND property.id = realestate.propertyId',
           )
+          .select(['realestate', 'property'])
           .getRawMany();
         const Pjewelry = await this.jewelryEntity
           .createQueryBuilder('jewelry')
           .innerJoin(Property, 'property')
-          .where('jewelry.isDropped = 1 AND property.id = jewelry.propertyId')
+          .where('jewelry.isDropped = 0 AND property.id = jewelry.propertyId')
+          .select(['jewelry', 'property'])
           .getRawMany();
         concatResult = {
           type: 'posted property',
@@ -171,7 +176,7 @@ export class AdminService {
       default:
         console.log('No historyValue');
     }
-    // console.log(concatResult);
+    console.log(concatResult);
 
     return {
       code: 200,
